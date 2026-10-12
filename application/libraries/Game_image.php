@@ -4,6 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Unggah gambar game: validasi ketat lalu di-encode ULANG dengan GD (maks 640px).
  * Re-encode membuang metadata/payload tersembunyi, jadi file "gambar" yang sebenarnya skrip tidak lolos.
+ *
+ * Tanpa ekstensi GD (mis. XAMPP default) tetap jalan: gambar disimpan APA ADANYA setelah pemeriksaan
+ * tipe/ukuran/isi (tanpa resize & re-encode). Aktifkan GD (php.ini: extension=gd) untuk hasil optimal.
  */
 class Game_image
 {
@@ -13,6 +16,11 @@ class Game_image
 
     private $CI;
     public $error = '';
+
+    public static function has_gd()
+    {
+        return function_exists('imagecreatefromstring') && function_exists('imagecreatetruecolor');
+    }
 
     public function __construct()
     {
@@ -57,6 +65,9 @@ class Game_image
             $this->error = 'Dimensi gambar terlalu besar.';
             return null;
         }
+        if (!self::has_gd()) {
+            return $this->keep_original($file, $dir, $info);
+        }
         $src = @imagecreatefromstring((string) file_get_contents($file));
         if (!$src) {
             $this->error = 'Gambar rusak atau tidak bisa dibaca.';
@@ -75,6 +86,25 @@ class Game_image
         $ok = $has_alpha ? imagepng($dst, $dir . $name, 7) : imagejpeg($dst, $dir . $name, 85);
         imagedestroy($src); imagedestroy($dst);
         if (!$ok) {
+            $this->error = 'Gagal menyimpan gambar.';
+            return null;
+        }
+        @chmod($dir . $name, 0644);
+        return self::DIR . $name;
+    }
+
+    /** Cadangan tanpa GD: simpan file asli dengan nama acak + ekstensi sesuai isi (bukan kiriman pengguna). */
+    private function keep_original($file, $dir, array $info)
+    {
+        $bytes = (string) file_get_contents($file);
+        // tolak bila ada penanda kode (skrip yang disisipkan di dalam "gambar")
+        if (preg_match('/<\?(php|=)|<script|<%/i', $bytes)) {
+            $this->error = 'File ditolak: mengandung kode yang mencurigakan.';
+            return null;
+        }
+        $ext = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'][$info[2]];
+        $name = bin2hex(random_bytes(12)) . '.' . $ext;
+        if (!@rename($file, $dir . $name)) {
             $this->error = 'Gagal menyimpan gambar.';
             return null;
         }

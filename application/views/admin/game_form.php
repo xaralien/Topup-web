@@ -22,6 +22,7 @@ $chk = function ($f) use ($g, $post) { return $post ? (bool) $this->input->post(
       <label class="text-xs font-normal"><input type="checkbox" name="remove_image" value="1"> hapus gambar</label></div><?php endif; ?>
     <input class="mt-1 block w-full text-sm" type="file" name="image" accept="image/png,image/jpeg,image/webp" data-pv-file>
     <span class="text-xs font-normal text-slate-500">JPG/PNG/WebP, maks 2 MB. Disarankan persegi (mis. 512×512); otomatis dikecilkan ke 640px.</span>
+    <?php if (!Game_image::has_gd()): ?><span class="mt-1 block text-xs font-semibold text-amber-600">Ekstensi GD PHP belum aktif: gambar disimpan apa adanya (tidak dikecilkan). Aktifkan <code>extension=gd</code> di php.ini lalu restart Apache.</span><?php endif; ?>
     <p class="mt-1 hidden text-xs font-semibold" data-pv-msg></p></div>
 
   <?php $minprice = $packs ? min(array_column($packs, 'price')) : 20000; ?>

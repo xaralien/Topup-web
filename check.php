@@ -24,9 +24,10 @@ function add(&$rows, $group, $label, $ok, $hint = '') { $rows[] = [$group, $labe
 
 // 1. PHP
 add($rows, 'PHP', 'Versi PHP ' . PHP_VERSION, version_compare(PHP_VERSION, '7.4', '>='), 'Minimal PHP 7.4');
-foreach (['mysqli', 'curl', 'gd', 'mbstring', 'openssl'] as $e) {
-    add($rows, 'PHP', "Ekstensi $e", extension_loaded($e), "Aktifkan extension=$e di php.ini (XAMPP: Config > PHP) lalu restart Apache.");
+foreach (['mysqli', 'curl', 'mbstring', 'openssl', 'fileinfo'] as $e) {
+    add($rows, 'PHP', "Ekstensi $e", extension_loaded($e), "Aktifkan extension=$e di php.ini (XAMPP: Apache > Config > PHP (php.ini), hapus ; di depan baris extension=$e) lalu restart Apache.");
 }
+add($rows, 'PHP', 'Ekstensi gd (opsional: resize & pengamanan unggahan gambar)', extension_loaded('gd'), 'Tanpa GD unggahan tetap jalan tapi gambar tidak dikecilkan. Aktifkan: php.ini -> hapus ; pada ";extension=gd", simpan, restart Apache.');
 
 
 // 1b. Rewrite (URL tanpa index.php)
