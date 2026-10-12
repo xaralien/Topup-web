@@ -8,7 +8,8 @@ class MY_Controller extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->helper(['url', 'device']);
+        $this->load->helper(['url', 'form', 'device', 'topup']);
+        $this->config->load('duitku', TRUE);
         $this->mode = view_mode();
     }
 

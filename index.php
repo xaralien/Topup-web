@@ -38,6 +38,25 @@
 
 /*
  *---------------------------------------------------------------
+ * .env LOADER (sederhana: KEY=VALUE per baris, '#' = komentar)
+ *---------------------------------------------------------------
+ */
+date_default_timezone_set('Asia/Jakarta');
+
+if (is_readable(__DIR__.'/.env'))
+{
+	foreach (file(__DIR__.'/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line)
+	{
+		$line = trim($line);
+		if ($line === '' || $line[0] === '#' || strpos($line, '=') === false) continue;
+		list($k, $v) = explode('=', $line, 2);
+		$k = trim($k); $v = trim($v, " \t\"'");
+		if (getenv($k) === false) { putenv("$k=$v"); $_SERVER[$k] = $v; }
+	}
+}
+
+/*
+ *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
  *---------------------------------------------------------------
  *
@@ -53,7 +72,7 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+	define('ENVIRONMENT', getenv('CI_ENV') ?: (isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development'));
 
 /*
  *---------------------------------------------------------------

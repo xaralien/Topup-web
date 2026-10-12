@@ -2,36 +2,34 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Data dummy. Ganti dengan query database / API supplier saat backend siap.
+ * Katalog dari database. Bentuk array dijaga sama dengan prototipe:
+ * 'packs' => [[qty, price, pack_id], ...] supaya view lama tetap jalan.
  */
 class Game_model extends CI_Model
 {
-    private $games = [
-        'mobile-legends' => ['category' => 'Game Mobile', 'name' => 'Mobile Legends', 'currency' => 'Diamond', 'color' => '#C7D2FE', 'hot' => true,
-            'packs' => [['86', 20000], ['172', 39000], ['257', 58000], ['514', 115000], ['1050', 230000]]],
-        'free-fire' => ['category' => 'Game Mobile', 'name' => 'Free Fire', 'currency' => 'Diamond', 'color' => '#FDE68A', 'hot' => true,
-            'packs' => [['70', 10000], ['140', 20000], ['355', 50000], ['720', 100000]]],
-        'genshin-impact' => ['category' => 'Game Mobile', 'name' => 'Genshin Impact', 'currency' => 'Genesis Crystal', 'color' => '#FBCFE8', 'hot' => false,
-            'packs' => [['60', 16000], ['300', 79000], ['980', 249000], ['1980', 479000]]],
-        'pubg-mobile' => ['category' => 'Game Mobile', 'name' => 'PUBG Mobile', 'currency' => 'UC', 'color' => '#BAE6FD', 'hot' => true,
-            'packs' => [['60', 15000], ['325', 75000], ['660', 149000]]],
-        'roblox' => ['category' => 'Game PC', 'name' => 'Roblox', 'currency' => 'Robux', 'color' => '#BBF7D0', 'hot' => false,
-            'packs' => [['80', 15000], ['400', 75000], ['800', 150000]]],
-        'valorant' => ['category' => 'Game PC', 'name' => 'Valorant', 'currency' => 'VP', 'color' => '#DDD6FE', 'hot' => false,
-            'packs' => [['475', 59000], ['1000', 119000], ['2050', 239000]]],
-        'steam-wallet' => ['category' => 'Voucher', 'name' => 'Steam Wallet', 'currency' => 'IDR Voucher', 'color' => '#E2E8F0', 'hot' => false,
-            'packs' => [['12000', 14000], ['45000', 50000], ['120000', 130000]]],
-        'google-play' => ['category' => 'Voucher', 'name' => 'Google Play', 'currency' => 'Voucher', 'color' => '#D1FAE5', 'hot' => false,
-            'packs' => [['20000', 22000], ['50000', 53000], ['100000', 104000]]],
-    ];
+    private $cache = null;
 
     public function all()
     {
-        $out = [];
-        foreach ($this->games as $slug => $g) {
-            $out[] = ['slug' => $slug] + $g;
+        if ($this->cache !== null) {
+            return $this->cache;
         }
-        return $out;
+        $games = [];
+        foreach ($this->db->order_by('sort_order, id')->get_where('games', ['is_active' => 1])->result_array() as $g) {
+            $games[$g['id']] = [
+                'id' => (int) $g['id'], 'slug' => $g['slug'], 'category' => $g['category'], 'name' => $g['name'],
+                'currency' => $g['currency'], 'color' => $g['color'], 'hot' => (bool) $g['is_hot'],
+                'needs_zone' => (bool) $g['needs_zone'], 'packs' => [],
+            ];
+        }
+        if ($games) {
+            $q = $this->db->where_in('game_id', array_keys($games))->where('is_active', 1)->order_by('sort_order, id')->get('packs');
+            foreach ($q->result_array() as $p) {
+                $games[$p['game_id']]['packs'][] = [$p['qty'], (int) $p['price'], (int) $p['id']];
+            }
+        }
+        // game tanpa nominal aktif tidak ditampilkan
+        return $this->cache = array_values(array_filter($games, function ($g) { return !empty($g['packs']); }));
     }
 
     public function popular()
@@ -41,7 +39,24 @@ class Game_model extends CI_Model
 
     public function find($slug)
     {
-        return isset($this->games[$slug]) ? ['slug' => $slug] + $this->games[$slug] : null;
+        foreach ($this->all() as $g) {
+            if ($g['slug'] === $slug) {
+                return $g;
+            }
+        }
+        return null;
+    }
+
+    /** Ambil nominal milik game tsb – harga SELALU dari DB, bukan dari input pengguna. */
+    public function find_pack($game_id, $pack_id)
+    {
+        return $this->db->get_where('packs', ['id' => (int) $pack_id, 'game_id' => (int) $game_id, 'is_active' => 1])->row_array();
+    }
+
+    public function slug_by_id($id)
+    {
+        $r = $this->db->select('slug')->get_where('games', ['id' => (int) $id])->row_array();
+        return $r ? $r['slug'] : '';
     }
 
     public function categories()
@@ -54,7 +69,6 @@ class Game_model extends CI_Model
         return trim(preg_replace('/[\s\-_]+/', ' ', mb_strtolower((string) $s)));
     }
 
-    /** Cari game berdasarkan nama/mata uang/kategori; $cat opsional. */
     public function search($q = '', $cat = '')
     {
         $q = $this->norm($q);
@@ -66,7 +80,6 @@ class Game_model extends CI_Model
         }));
     }
 
-    /** Cari produk (nominal) – semua kata kunci harus cocok, mis. "mlbb 86" / "diamond 172". */
     public function products($q, $limit = 12)
     {
         $words = array_filter(explode(' ', $this->norm($q)));

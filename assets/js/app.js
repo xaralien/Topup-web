@@ -41,33 +41,63 @@
     tick();
   });
 
-  // Checkout: pilih nominal & metode bayar
+  // Checkout: pilih nominal & metode bayar -> field tersembunyi (harga final selalu dihitung ulang di server)
   var co = document.querySelector('[data-checkout]');
   if (co) {
     var packs = co.querySelectorAll('[data-pack]'), pays = co.querySelectorAll('[data-pay]');
     var total = co.querySelector('[data-total]'), summary = co.querySelector('[data-summary]');
-    var buy = co.querySelector('[data-buy]'), uid = co.querySelector('[data-userid]');
-    var pack = null, pay = null;
+    var buy = co.querySelector('[data-buy]'), uid = co.querySelector('[data-userid]'), mail = co.querySelector('[data-email]');
+    var packIn = co.querySelector('[name="pack_id"]'), payIn = co.querySelector('[name="payment_method"]');
 
     function pick(list, btn) { list.forEach(function (b) { b.classList.toggle('is-active', b === btn); }); }
     function refresh() {
-      var ok = pack && pay && uid.value.trim().length >= 4;
+      var ok = packIn.value && payIn.value && uid.value.trim().length >= 3 && /.+@.+\..+/.test(mail.value.trim());
       buy.disabled = !ok;
       buy.classList.toggle('opacity-50', !ok);
     }
     packs.forEach(function (b) {
       b.addEventListener('click', function () {
-        pack = b; pick(packs, b);
+        packIn.value = b.dataset.id; pick(packs, b);
         total.textContent = rp(+b.dataset.price);
         summary.textContent = b.dataset.label;
         refresh();
       });
+      if (packIn.value && packIn.value === b.dataset.id) b.click();
     });
-    pays.forEach(function (b) { b.addEventListener('click', function () { pay = b; pick(pays, b); refresh(); }); });
+    pays.forEach(function (b) {
+      b.addEventListener('click', function () { payIn.value = b.dataset.code; pick(pays, b); refresh(); });
+      if (payIn.value && payIn.value === b.dataset.code) b.click();
+    });
     uid.addEventListener('input', refresh);
-    buy.addEventListener('click', function () {
-      // TODO: POST ke controller order -> payment gateway
-      alert('Prototipe: pesanan ' + pack.dataset.label + ' via ' + pay.textContent.trim() + ' (' + total.textContent + ')');
+    mail.addEventListener('input', refresh);
+    co.addEventListener('submit', function () { buy.disabled = true; buy.textContent = 'Memproses…'; });
+    refresh();
+  }
+
+  // Halaman pesanan: timer kedaluwarsa, polling status, salin nomor VA
+  var od = document.querySelector('[data-order]');
+  if (od) {
+    var left = +od.dataset.expires, timer = od.querySelector('[data-timer]');
+    if (timer) {
+      (function tick() {
+        var m = Math.floor(left / 60), s = left % 60;
+        timer.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+        if (left-- > 0) setTimeout(tick, 1000);
+      })();
+    }
+    var cur = od.dataset.status;
+    if (cur === 'pending' || cur === 'paid' || cur === 'processing') {
+      var poll = setInterval(function () {
+        fetch(od.dataset.statusUrl, { headers: { Accept: 'application/json' } })
+          .then(function (r) { return r.json(); })
+          .then(function (d) { if (d.status && d.status !== cur) { clearInterval(poll); location.reload(); } })
+          .catch(function () {});
+      }, 5000);
+    }
+    var cp = od.querySelector('[data-copy]');
+    if (cp) cp.addEventListener('click', function () {
+      var t = od.querySelector('[data-copy-text]').textContent.trim();
+      (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { cp.textContent = 'Tersalin ✓'; }).catch(function () { cp.textContent = 'Salin manual'; });
     });
   }
 })();

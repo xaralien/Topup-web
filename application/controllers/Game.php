@@ -15,6 +15,10 @@ class Game extends MY_Controller
         if (!$game) {
             show_404();
         }
-        $this->render('game', ['title' => 'Top Up ' . $game['name'], 'game' => $game]);
+        $this->render('game', [
+            'title'   => 'Top Up ' . $game['name'],
+            'game'    => $game,
+            'methods' => $this->config->item('payment_methods', 'duitku'),
+        ]);
     }
 }

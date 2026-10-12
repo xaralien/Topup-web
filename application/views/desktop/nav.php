@@ -6,7 +6,7 @@
       <a href="<?= site_url('games') ?>" class="hover:text-brand">Semua Game</a>
       <a href="<?= site_url() ?>#promo" class="hover:text-brand">Promo</a>
       <a href="<?= site_url() ?>#faq" class="hover:text-brand">FAQ</a>
-      <a href="#" class="hover:text-brand">Cek Pesanan</a>
+      <a href="<?= site_url('order/check') ?>" class="hover:text-brand">Cek Pesanan</a>
       <a href="#" class="rounded-xl bg-brand px-4 py-2 font-bold text-white hover:bg-brand-dark transition">Masuk</a>
     </nav>
   </div>

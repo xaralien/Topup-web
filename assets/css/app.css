@@ -29,3 +29,5 @@
 .chip{border:1.5px solid #E2E8F0;border-radius:999px;padding:.4rem 1rem;color:#475569;background:#fff;transition:all .2s}
 .chip:hover{border-color:#A5B4FC;color:#4F46E5}
 .chip.is-active{background:#4F46E5;border-color:#4F46E5;color:#fff}
+
+.err{margin-top:.35rem;font-size:.8rem;font-weight:600;color:#e11d48}
