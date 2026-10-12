@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MYTopup – Pilihan Gaya Desain</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Plus+Jakarta+Sans:wght@500;800&family=Space+Grotesk:wght@500;700&family=Nunito:wght@600;800;900&family=Orbitron:wght@600;800&family=Sora:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:#e5e7eb;color:#111;padding:24px}
+h1{font-size:28px;margin-bottom:6px}
+.intro{margin-bottom:32px;color:#444}
+.style{margin-bottom:56px}
+.style>h2{font-size:20px;margin-bottom:4px}
+.style>p{color:#555;margin-bottom:14px;font-size:14px}
+.row{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.desk{flex:1 1 680px;min-width:320px;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px #0003}
+.phone{width:280px;border:8px solid #111;border-radius:34px;overflow:hidden;box-shadow:0 8px 30px #0003;flex:0 0 auto}
+.bar{height:26px;background:#d1d5db;display:flex;align-items:center;gap:6px;padding:0 10px}
+.bar i{width:9px;height:9px;border-radius:50%;background:#9ca3af;display:block}
+.swatches{display:flex;gap:6px;margin-top:10px}
+.swatches b{width:46px;height:30px;border-radius:6px;font-size:9px;display:flex;align-items:flex-end;padding:2px 3px;color:#fff;text-shadow:0 0 3px #0008}
+
+/* ---------- A. Minimalis Modern ---------- */
+.A{background:#fff;color:#0F172A;font-family:'Plus Jakarta Sans',sans-serif}
+.A nav{display:flex;justify-content:space-between;align-items:center;padding:16px 28px;border-bottom:1px solid #E2E8F0;font-weight:800}
+.A nav span{color:#4F46E5}.A nav small{font-weight:500;color:#64748B}
+.A .hero{padding:44px 28px;display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center}
+.A h3{font-size:38px;line-height:1.1;font-weight:800;letter-spacing:-1px}
+.A h3 em{font-style:normal;color:#4F46E5}
+.A p{color:#475569;margin:12px 0 20px;font-size:14px}
+.A .btn{display:inline-block;background:#4F46E5;color:#fff;padding:12px 22px;border-radius:12px;font-weight:700;font-size:14px}
+.A .btn.o{background:#fff;color:#0F172A;border:1px solid #CBD5E1;margin-left:8px}
+.A .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.A .g{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:16px;padding:14px;font-size:12px;font-weight:700}
+.A .g div{height:44px;border-radius:10px;margin-bottom:8px}
+.A .phone-in{padding:16px}
+.A .phone-in h3{font-size:24px}
+
+/* ---------- B. Brutalist ---------- */
+.B{background:#F4F0E6;color:#000;font-family:'Space Grotesk',sans-serif}
+.B nav{display:flex;justify-content:space-between;padding:14px 24px;border-bottom:3px solid #000;font-weight:700;text-transform:uppercase}
+.B .hero{padding:36px 24px;display:grid;grid-template-columns:1.2fr 1fr;gap:20px}
+.B h3{font-size:46px;line-height:.95;font-weight:700;text-transform:uppercase}
+.B h3 mark{background:#FFD60A;padding:0 6px}
+.B p{margin:14px 0 18px;font-size:14px;max-width:380px}
+.B .btn{display:inline-block;background:#FF3EA5;border:3px solid #000;box-shadow:5px 5px 0 #000;padding:12px 20px;font-weight:700;text-transform:uppercase;font-size:14px}
+.B .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.B .g{border:3px solid #000;background:#fff;box-shadow:4px 4px 0 #000;padding:10px;font-weight:700;font-size:12px;text-transform:uppercase}
+.B .g div{height:40px;border:2px solid #000;margin-bottom:6px}
+.B .phone-in{padding:14px}.B .phone-in h3{font-size:30px}
+
+/* ---------- C. Hangat & Ramah ---------- */
+.C{background:#FFF4E8;color:#3B2A20;font-family:Nunito,sans-serif}
+.C nav{display:flex;justify-content:space-between;align-items:center;padding:16px 28px;font-weight:900;font-size:18px}
+.C nav span{background:#FF6B4A;color:#fff;padding:8px 16px;border-radius:99px;font-size:13px}
+.C .hero{padding:24px 28px 44px;display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center}
+.C h3{font-size:40px;line-height:1.1;font-weight:900}
+.C h3 em{font-style:normal;color:#FF6B4A}
+.C p{margin:12px 0 20px;font-size:15px;font-weight:600;color:#7A5C4A}
+.C .btn{display:inline-block;background:#FF6B4A;color:#fff;padding:14px 26px;border-radius:99px;font-weight:900;box-shadow:0 6px 0 #D94E30}
+.C .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.C .g{background:#fff;border-radius:22px;padding:12px;text-align:center;font-weight:800;font-size:12px;box-shadow:0 4px 0 #F3DCC4}
+.C .g div{height:48px;border-radius:16px;margin-bottom:6px}
+.C .phone-in{padding:16px}.C .phone-in h3{font-size:26px}
+
+/* ---------- D. Futuristik 3D ---------- */
+.D{background:radial-gradient(circle at 70% 20%,#2A1065 0,#0B0620 55%);color:#EDE9FE;font-family:Sora,sans-serif}
+.D nav{display:flex;justify-content:space-between;padding:16px 28px;font-family:Orbitron;font-weight:800;letter-spacing:2px}
+.D nav span{color:#22D3EE}
+.D .hero{padding:36px 28px 44px;display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:center}
+.D h3{font-family:Orbitron;font-size:32px;line-height:1.15;font-weight:800}
+.D h3 em{font-style:normal;background:linear-gradient(90deg,#8B5CF6,#22D3EE);-webkit-background-clip:text;color:transparent}
+.D p{margin:12px 0 20px;font-size:13px;color:#C4B5FD}
+.D .btn{display:inline-block;background:linear-gradient(90deg,#8B5CF6,#22D3EE);color:#0B0620;padding:13px 24px;border-radius:12px;font-weight:700;box-shadow:0 0 28px #8B5CF699}
+.D .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;transform:perspective(700px) rotateY(-14deg) rotateX(6deg)}
+.D .g{background:#ffffff12;border:1px solid #ffffff30;backdrop-filter:blur(6px);border-radius:16px;padding:12px;font-size:11px}
+.D .g div{height:46px;border-radius:10px;margin-bottom:6px;box-shadow:0 0 18px currentColor}
+.D .phone-in{padding:16px}.D .phone-in h3{font-size:20px}
+
+.phone-in .grid{margin-top:14px;grid-template-columns:repeat(3,1fr)!important;transform:none!important}
+.phone-in .hero{display:block;padding:0}
+.phone-in .g{font-size:10px!important;padding:6px!important}
+.phone-in .g div{height:28px!important}
+@media(max-width:700px){.hero{grid-template-columns:1fr!important}}
+</style>
+</head>
+<body>
+<h1>MYTopup – Pilihan Gaya Desain</h1>
+<p class="intro">4 konsep (desktop + mobile). Konten sama, hanya gayanya berbeda. Pilih A / B / C / D (atau campuran) – setelah itu saya buat kode CI3.<br>
+<small>Catatan: Figma tidak bisa saya akses langsung dari sesi ini, jadi mock-up dibuat sebagai HTML; bisa saya ekspor ke Figma/FigJam jika diperlukan.</small></p>
+
+<!-- A -->
+<section class="style">
+<h2>A · Minimalis Modern</h2>
+<p>Bersih, banyak ruang putih, terpercaya. Cocok untuk semua umur &amp; kesan "aman" saat pembayaran. Font: Plus Jakarta Sans.</p>
+<div class="row">
+ <div class="desk"><div class="bar"><i></i><i></i><i></i></div>
+  <div class="A"><nav><div>MY<span>Topup</span></div><small>Game · Voucher · Akun · Login</small></nav>
+   <div class="hero"><div><h3>Top up game favoritmu, <em>masuk dalam 10 detik.</em></h3><p>Diamond, UC, voucher &amp; akun game. Harga jujur, pembayaran QRIS/e-wallet, layanan 24 jam.</p><span class="btn">Top Up Sekarang</span><span class="btn o">Lihat Promo</span></div>
+   <div class="grid"><div class="g"><div style="background:#C7D2FE"></div>Mobile Legends</div><div class="g"><div style="background:#FDE68A"></div>Free Fire</div><div class="g"><div style="background:#FBCFE8"></div>Genshin</div><div class="g"><div style="background:#BAE6FD"></div>PUBG M</div><div class="g"><div style="background:#BBF7D0"></div>Roblox</div><div class="g"><div style="background:#DDD6FE"></div>Valorant</div></div></div></div></div>
+ <div class="phone"><div class="A"><div class="phone-in"><b>MY<span style="color:#4F46E5">Topup</span></b><div class="hero" style="margin-top:14px"><h3>Top up game favoritmu, <em>10 detik.</em></h3><p>Harga jujur, bayar QRIS.</p><span class="btn">Top Up Sekarang</span><div class="grid"><div class="g"><div style="background:#C7D2FE"></div>MLBB</div><div class="g"><div style="background:#FDE68A"></div>FF</div><div class="g"><div style="background:#FBCFE8"></div>Genshin</div></div></div></div></div></div>
+</div>
+<div class="swatches"><b style="background:#4F46E5">#4F46E5</b><b style="background:#0F172A">#0F172A</b><b style="background:#F8FAFC;color:#000;text-shadow:none">#F8FAFC</b><b style="background:#10B981">#10B981</b></div>
+</section>
+
+<!-- B -->
+<section class="style">
+<h2>B · Brutalist / Linear</h2>
+<p>Border tebal, bayangan keras, warna kontras. Berani &amp; mudah diingat, cocok remaja/gamer. Font: Space Grotesk.</p>
+<div class="row">
+ <div class="desk"><div class="bar"><i></i><i></i><i></i></div>
+  <div class="B"><nav><div>MYTOPUP</div><div>Game / Voucher / Akun / Login</div></nav>
+   <div class="hero"><div><h3>Top up. <mark>Tanpa ribet.</mark> Langsung masuk.</h3><p>Diamond, UC, voucher &amp; akun. Bayar QRIS, saldo masuk otomatis.</p><span class="btn">Top Up Sekarang →</span></div>
+   <div class="grid"><div class="g"><div style="background:#FFD60A"></div>Mobile Legends</div><div class="g"><div style="background:#FF3EA5"></div>Free Fire</div><div class="g"><div style="background:#38BDF8"></div>Genshin</div><div class="g"><div style="background:#A3E635"></div>PUBG M</div></div></div></div></div>
+ <div class="phone"><div class="B"><div class="phone-in"><b>MYTOPUP</b><div class="hero" style="margin-top:14px"><h3>Top up. <mark>Tanpa ribet.</mark></h3><p>Bayar QRIS, masuk otomatis.</p><span class="btn">Top Up →</span><div class="grid" style="grid-template-columns:repeat(2,1fr)!important"><div class="g"><div style="background:#FFD60A"></div>MLBB</div><div class="g"><div style="background:#FF3EA5"></div>FF</div></div></div></div></div></div>
+</div>
+<div class="swatches"><b style="background:#000">#000000</b><b style="background:#F4F0E6;color:#000;text-shadow:none">#F4F0E6</b><b style="background:#FFD60A;color:#000;text-shadow:none">#FFD60A</b><b style="background:#FF3EA5">#FF3EA5</b></div>
+</section>
+
+<!-- C -->
+<section class="style">
+<h2>C · Hangat &amp; Ramah</h2>
+<p>Sudut membulat, warna hangat, tombol "empuk". Nyaman untuk anak-anak, orang tua, &amp; pembeli pertama. Font: Nunito.</p>
+<div class="row">
+ <div class="desk"><div class="bar"><i></i><i></i><i></i></div>
+  <div class="C"><nav><div>MYTopup 🎮</div><span>Masuk</span></nav>
+   <div class="hero"><div><h3>Yuk top up! <em>Cepat, murah,</em> dan aman 🧡</h3><p>Pilih game, masukkan ID, bayar. Selesai! Admin ramah siap bantu kapan saja.</p><span class="btn">Mulai Top Up</span></div>
+   <div class="grid"><div class="g"><div style="background:#FFD9A8"></div>MLBB</div><div class="g"><div style="background:#FFB4A2"></div>Free Fire</div><div class="g"><div style="background:#B5E5CF"></div>Genshin</div><div class="g"><div style="background:#C9D8FF"></div>PUBG M</div><div class="g"><div style="background:#FFE3A3"></div>Roblox</div><div class="g"><div style="background:#E8C9FF"></div>Valorant</div></div></div></div></div>
+ <div class="phone"><div class="C"><div class="phone-in"><b>MYTopup 🎮</b><div class="hero" style="margin-top:14px"><h3>Yuk top up! <em>Cepat &amp; aman</em> 🧡</h3><p>Pilih game, isi ID, bayar.</p><span class="btn">Mulai Top Up</span><div class="grid"><div class="g"><div style="background:#FFD9A8"></div>MLBB</div><div class="g"><div style="background:#FFB4A2"></div>FF</div><div class="g"><div style="background:#B5E5CF"></div>Genshin</div></div></div></div></div></div>
+</div>
+<div class="swatches"><b style="background:#FF6B4A">#FF6B4A</b><b style="background:#3B2A20">#3B2A20</b><b style="background:#FFF4E8;color:#000;text-shadow:none">#FFF4E8</b><b style="background:#2BB5A0">#2BB5A0</b></div>
+</section>
+
+<!-- D -->
+<section class="style">
+<h2>D · Futuristik 3D</h2>
+<p>Gelap, neon, kartu kaca miring 3D. Paling "wow" &amp; gamer-banget; perlu optimasi performa di HP kelas bawah. Font: Orbitron + Sora.</p>
+<div class="row">
+ <div class="desk"><div class="bar"><i></i><i></i><i></i></div>
+  <div class="D"><nav><div>MY<span>TOPUP</span></div><div style="font-size:11px">GAME · VOUCHER · AKUN</div></nav>
+   <div class="hero"><div><h3>LEVEL UP <em>dalam hitungan detik.</em></h3><p>Top up diamond, UC &amp; voucher instan. Pembayaran aman, proses otomatis 24/7.</p><span class="btn">Top Up Sekarang</span></div>
+   <div class="grid"><div class="g"><div style="background:#8B5CF6;color:#8B5CF6"></div>MLBB</div><div class="g"><div style="background:#22D3EE;color:#22D3EE"></div>Free Fire</div><div class="g"><div style="background:#F472B6;color:#F472B6"></div>Genshin</div><div class="g"><div style="background:#A3E635;color:#A3E635"></div>PUBG M</div><div class="g"><div style="background:#FBBF24;color:#FBBF24"></div>Roblox</div><div class="g"><div style="background:#FB7185;color:#FB7185"></div>Valorant</div></div></div></div></div>
+ <div class="phone"><div class="D"><div class="phone-in"><b style="font-family:Orbitron">MY<span style="color:#22D3EE">TOPUP</span></b><div class="hero" style="margin-top:14px"><h3>LEVEL UP <em>dalam detik.</em></h3><p>Instan, aman, 24/7.</p><span class="btn">Top Up</span><div class="grid"><div class="g"><div style="background:#8B5CF6;color:#8B5CF6"></div>MLBB</div><div class="g"><div style="background:#22D3EE;color:#22D3EE"></div>FF</div><div class="g"><div style="background:#F472B6;color:#F472B6"></div>GI</div></div></div></div></div></div>
+</div>
+<div class="swatches"><b style="background:#0B0620">#0B0620</b><b style="background:#8B5CF6">#8B5CF6</b><b style="background:#22D3EE;color:#000;text-shadow:none">#22D3EE</b><b style="background:#F472B6">#F472B6</b></div>
+</section>
+</body>
+</html>
