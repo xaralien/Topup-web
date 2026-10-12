@@ -28,6 +28,35 @@ foreach (['mysqli', 'curl', 'gd', 'mbstring', 'openssl'] as $e) {
     add($rows, 'PHP', "Ekstensi $e", extension_loaded($e), "Aktifkan extension=$e di php.ini (XAMPP: Config > PHP) lalu restart Apache.");
 }
 
+
+// 1b. Rewrite (URL tanpa index.php)
+$cfgtxt = @file_get_contents("$root/application/config/config.php") ?: '';
+preg_match("/\\\$config\['index_page'\]\s*=\s*'([^']*)'/", $cfgtxt, $m);
+add($rows, 'Rewrite', "config index_page = '" . ($m[1] ?? '?') . "'", isset($m[1]) && $m[1] === '', "Ubah menjadi \$config['index_page'] = ''; di application/config/config.php agar link tidak memuat index.php.");
+add($rows, 'Rewrite', '.htaccess ada & berisi RewriteRule', is_readable("$root/.htaccess") && strpos((string) @file_get_contents("$root/.htaccess"), 'RewriteRule') !== false, 'Pastikan file bernama persis ".htaccess" (bukan ".htaccess.txt") di folder proyek.');
+if (function_exists('apache_get_modules')) {
+    add($rows, 'Rewrite', 'Apache: mod_rewrite aktif', in_array('mod_rewrite', apache_get_modules(), true), 'Buka C:\xampp\apache\conf\httpd.conf, hapus tanda # pada baris "LoadModule rewrite_module modules/mod_rewrite.so", lalu restart Apache.');
+}
+if (PHP_SAPI === 'cli-server') {
+    add($rows, 'Rewrite', 'Tes otomatis dilewati (server bawaan PHP)', true);
+} else {
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $base0 = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
+    $probe = function ($path) use ($host) {
+        $ch = curl_init("http://$host$path");
+        curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 6, CURLOPT_FOLLOWLOCATION => false]);
+        $body = (string) curl_exec($ch); $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
+        return [$code, $body];
+    };
+    $isCI = function ($b) { return strpos($b, 'The page you requested was not found') !== false || strpos($b, 'A PHP Error') !== false || strpos($b, '<!doctype html') !== false; };
+    list($c1, $b1) = $probe("$base0/index.php/__rewrite_probe");
+    list($c2, $b2) = $probe("$base0/__rewrite_probe");
+    add($rows, 'Rewrite', "Kontrol: $base0/index.php/... sampai ke CodeIgniter (HTTP $c1)", $isCI($b1), 'index.php tidak dieksekusi: cek PHP/Apache.');
+    $clean = $isCI($b2);
+    add($rows, 'Rewrite', "URL bersih $base0/... sampai ke CodeIgniter (HTTP $c2)", $clean,
+        'URL tanpa index.php TIDAK diteruskan ke index.php. Penyebab umum di XAMPP: (1) mod_rewrite belum aktif (httpd.conf), (2) <Directory "C:/xampp/htdocs"> masih AllowOverride None -> ubah ke All, lalu restart Apache. (3) coba aktifkan baris "RewriteBase ' . $base0 . '/" di .htaccess.');
+}
+
 // 2. File penting (penyebab umum 404 = file belum ter-pull)
 $need = [
     'index.php', '.htaccess', 'system/core/CodeIgniter.php',

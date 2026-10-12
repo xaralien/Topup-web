@@ -1,6 +1,8 @@
+# URL tanpa index.php (butuh mod_rewrite aktif dan AllowOverride All untuk folder ini).
+# Jika proyek di subfolder dan rewrite tidak jalan, hapus tanda # pada RewriteBase dan sesuaikan nama folder.
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    # RewriteBase /karcis/
+    # RewriteBase /topup-web/
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php/$1 [L]

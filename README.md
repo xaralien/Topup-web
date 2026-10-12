@@ -11,7 +11,9 @@ Isi repo ini adalah **lapisan aplikasi** (`application/`, `assets/`). Folder `sy
    ```
    Database lama (dari versi sebelumnya)? Jalankan migrasi berurutan: `database/migrations/002_admin_and_images.sql` lalu `003_customer_accounts.sql`.
 2. `cp .env.example .env`, lalu isi `DB_*` dan kredensial Duitku (`DUITKU_MERCHANT_CODE`, `DUITKU_API_KEY`). `.env` sudah di-`.gitignore`.
-3. Jalankan: Apache/Nginx, atau `php -S localhost:8000` dari root (URL berbentuk `/index.php/...`).
+3. Jalankan lewat Apache (XAMPP) dengan **mod_rewrite aktif** dan `AllowOverride All` -> URL bersih tanpa `index.php`. Cek semuanya di `http://localhost/<folder>/check.php` (hanya localhost; hapus di produksi).
+   - Tanpa Apache (mis. `php -S`), set `$config['index_page'] = 'index.php';` di `application/config/config.php` dan akses `/index.php/...`.
+   - XAMPP: `httpd.conf` -> hapus `#` pada `LoadModule rewrite_module ...`, dan di `<Directory "C:/xampp/htdocs">` ubah `AllowOverride None` menjadi `All`, lalu restart Apache.
 
 ## Login (pelanggan & admin)
 Satu halaman masuk untuk semua: **`/auth/login`** (tombol *Masuk* di navbar).
