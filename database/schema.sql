@@ -96,3 +96,10 @@ CREATE TABLE IF NOT EXISTS login_attempts (
   created_at DATETIME    NOT NULL,
   KEY idx_attempts (ip, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS settings (
+  k          VARCHAR(60)  NOT NULL PRIMARY KEY,
+  v          MEDIUMTEXT   NULL,
+  is_secret  TINYINT(1)   NOT NULL DEFAULT 0,     -- 1 = nilai dienkripsi (AES-256-GCM)
+  updated_at DATETIME     NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

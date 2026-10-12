@@ -13,6 +13,15 @@
 </div>
 <?php endif; ?>
 
+<?php
+$tpl = $this->setting_model->get('wa_order_template', '') ?: 'Halo kak, pesanan {no} ({item}) untuk ID {id} {status}. Terima kasih sudah belanja di {toko}!';
+$msg = strtr($tpl, ['{no}' => $order['order_no'], '{item}' => $order['game_name'] . ' ' . $order['item_label'],
+    '{id}' => $order['target_user_id'] . ($order['target_zone_id'] ? ' (' . $order['target_zone_id'] . ')' : ''),
+    '{status}' => mb_strtolower(order_status_info($order['status'])[0]), '{toko}' => $store_name]);
+$wa = wa_url($order['whatsapp'], $msg); ?>
+<?php if ($wa): ?><a href="<?= html_escape($wa) ?>" target="_blank" rel="noopener" class="a-btn-soft mt-4 !border-emerald-200 !text-emerald-700 hover:!bg-emerald-50"><?= icon('chat', 'h-4 w-4') ?>Chat pelanggan di WhatsApp</a>
+<?php elseif (!empty($order['whatsapp'])): ?><p class="mt-4 text-xs text-slate-400">Nomor WhatsApp pelanggan tidak valid.</p><?php endif; ?>
+
 <dl class="mt-5 grid max-w-2xl divide-y divide-slate-100 a-card text-sm">
   <?php foreach ([
     'Produk' => $order['game_name'] . ' · ' . $order['item_label'], 'SKU supplier' => $order['sku'] ?: '-',

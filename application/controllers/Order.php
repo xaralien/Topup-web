@@ -25,7 +25,7 @@ class Order extends MY_Controller
         if ($this->input->method() !== 'post') {
             redirect();
         }
-        $methods = $this->config->item('payment_methods', 'duitku');
+        $methods = $this->setting_model->enabled_methods();
         $game = $this->game_model->find((string) $this->input->post('game', TRUE));
         if (!$game) {
             show_404();
@@ -54,12 +54,12 @@ class Order extends MY_Controller
         }
 
         if (!$this->duitku->configured()) {
-            return $this->show_form($game, $methods, 'Pembayaran belum dikonfigurasi (DUITKU_MERCHANT_CODE / DUITKU_API_KEY).');
+            return $this->show_form($game, $methods, 'Pembayaran belum diaktifkan oleh pemilik toko. Silakan hubungi admin.');
         }
 
         $order_no = $this->order_model->new_order_no();
         $label    = $pack['qty'] . ' ' . $game['currency'];
-        $expiry   = (int) $this->config->item('duitku_expiry_minutes', 'duitku');
+        $expiry   = $this->duitku->expiry_minutes();
         $user_id  = $this->input->post('user_id', TRUE);
         $zone_id  = $game['needs_zone'] ? $this->input->post('zone_id', TRUE) : null;
         $wa       = $this->input->post('whatsapp', TRUE);
@@ -162,7 +162,7 @@ class Order extends MY_Controller
     private function show_form($game, $methods, $global_error = null)
     {
         $this->render('game', [
-            'title' => 'Top Up ' . $game['name'], 'game' => $game, 'methods' => $methods, 'global_error' => $global_error,
+            'title' => 'Top Up ' . $game['name'], 'game' => $game, 'methods' => $methods, 'pay_ready' => $this->duitku->configured(), 'global_error' => $global_error,
         ]);
     }
 }

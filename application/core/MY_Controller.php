@@ -12,6 +12,7 @@ class MY_Controller extends CI_Controller
         $this->load->helper(['url', 'form', 'device', 'topup']);
         $this->config->load('duitku', TRUE);
         $this->mode = view_mode();
+        $this->load->model('setting_model');
 
         // Sesi hanya dibuka bila pengunjung sudah punya cookie sesi (tamu tidak dibebani sesi).
         if ($this->input->cookie($this->config->item('sess_cookie_name'))) {
@@ -44,7 +45,10 @@ class MY_Controller extends CI_Controller
     {
         $data['mode']  = $this->mode;
         $data['user']  = $this->current_user;
-        $data['title'] = isset($data['title']) ? $data['title'] . ' · MYTopup' : 'MYTopup – Top Up Game Cepat & Aman';
+        $name = $this->setting_model->store_name();
+        $data['site']  = ['name' => $name, 'wa_url' => $this->setting_model->wa_link($this->setting_model->get('wa_greeting', '') ?: 'Halo ' . $name . ', saya mau tanya.'),
+                          'wa_float' => $this->setting_model->get('wa_float', '1') !== '0'];
+        $data['title'] = isset($data['title']) ? $data['title'] . ' · ' . $name : $name . ' – Top Up Game Cepat & Aman';
         $this->load->view('partials/head', $data);
         $this->load->view($this->mode . '/' . $page, $data);
         $this->load->view($this->mode . '/footer', $data);
@@ -73,7 +77,7 @@ class Admin_Controller extends CI_Controller
             @mkdir($dir, 0700, TRUE);
         }
         $this->load->library('session');
-        $this->load->model(['admin_model', 'order_model']);
+        $this->load->model(['admin_model', 'order_model', 'setting_model']);
 
         // jangan di-cache browser/proxy, jangan boleh di-iframe
         $this->output->set_header('Cache-Control: no-store');
@@ -90,7 +94,8 @@ class Admin_Controller extends CI_Controller
     protected function render_admin($page, array $data = [])
     {
         $data['admin'] = $this->admin;
-        $data['title'] = (isset($data['title']) ? $data['title'] . ' · ' : '') . 'Admin MYTopup';
+        $data['store_name'] = $this->setting_model->store_name();
+        $data['title'] = (isset($data['title']) ? $data['title'] . ' · ' : '') . 'Admin ' . $data['store_name'];
         $data['flash'] = $this->session->flashdata('flash');
         $data['flash_error'] = $this->session->flashdata('flash_error');
         $this->load->view('admin/_head', $data);

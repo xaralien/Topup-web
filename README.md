@@ -9,8 +9,8 @@ Isi repo ini adalah **lapisan aplikasi** (`application/`, `assets/`). Folder `sy
    mysql -u root -p mytopup < database/schema.sql
    mysql -u root -p mytopup < database/seed.sql      # katalog contoh (ganti dengan data asli)
    ```
-   Database lama (dari versi sebelumnya)? Jalankan migrasi berurutan: `database/migrations/002_admin_and_images.sql` lalu `003_customer_accounts.sql`.
-2. `cp .env.example .env`, lalu isi `DB_*` dan kredensial Duitku (`DUITKU_MERCHANT_CODE`, `DUITKU_API_KEY`). `.env` sudah di-`.gitignore`.
+   Database lama (dari versi sebelumnya)? Jalankan migrasi berurutan: `002_admin_and_images.sql`, `003_customer_accounts.sql`, lalu `004_settings.sql` (folder `database/migrations/`).
+2. `cp .env.example .env`, lalu isi **hanya koneksi database** (`DB_*`). Duitku, WhatsApp, dan nama toko diatur dari **Admin > Pengaturan** (lihat di bawah) – tidak perlu mengedit file. `.env` sudah di-`.gitignore`.
 3. Jalankan lewat Apache (XAMPP) dengan **mod_rewrite aktif** dan `AllowOverride All` -> URL bersih tanpa `index.php`. Cek semuanya di `http://localhost/<folder>/check.php` (hanya localhost; hapus di produksi).
    - Tanpa Apache (mis. `php -S`), set `$config['index_page'] = 'index.php';` di `application/config/config.php` dan akses `/index.php/...`.
    - XAMPP: `httpd.conf` -> hapus `#` pada `LoadModule rewrite_module ...`, dan di `<Directory "C:/xampp/htdocs">` ubah `AllowOverride None` menjadi `All`, lalu restart Apache.
@@ -36,6 +36,15 @@ Satu halaman masuk untuk semua: **`/auth/login`** (tombol *Masuk* di navbar).
 
 ## URL tanpa `routes.php`
 Tidak ada custom route; URL mengikuti pola CodeIgniter `controller/method/param` (`/games`, `/auth/login`, `/account`, `/admin/orders/view/<no>`, `/payment/callback`, ...). URL cantik `/game/<slug>` dan `/order/<no>` ditangani `_remap()` di controllernya. `application/config/routes.php` hanya berisi `default_controller`.
+
+## Pengaturan toko (tanpa hardcode)
+Menu **Admin > Pengaturan** – semua tersimpan di database dan langsung berlaku:
+- **Toko**: nama toko (judul halaman & pesan WhatsApp).
+- **Duitku**: Merchant Code, API Key, mode sandbox/production, batas waktu bayar, dan pilihan metode pembayaran. Tombol **Simpan & tes koneksi** memverifikasi kredensial sekaligus mengambil daftar metode bayar yang benar-benar aktif di akun Duitku Anda. Callback URL ditampilkan untuk disalin ke dashboard Duitku.
+- **WhatsApp**: nomor CS (08… atau 62…), tombol chat melayang di situs, pesan sapaan, dan template pesan ke pelanggan (tombol *Chat pelanggan di WhatsApp* di halaman pesanan admin).
+- **API Key dienkripsi** (AES-256-GCM) dengan kunci acak `application/config/app.key` yang dibuat otomatis (tidak ikut git, ditolak webserver). **Backup file ini bersama database** – bila hilang, API Key cukup diisi ulang.
+- Kredensial Duitku di `.env` (`DUITKU_*`) masih dibaca sebagai cadangan bila Pengaturan kosong; nilai di database diprioritaskan.
+- Yang tetap di `.env`: koneksi database (harus ada sebelum pengaturan bisa dibaca).
 
 ## Alur pembayaran (Duitku)
 1. Pembeli isi ID, pilih nominal & metode di `/game/<slug>` -> `POST /order/create`.

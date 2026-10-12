@@ -21,6 +21,7 @@ $nav = [
   ['games',     'Game & Produk',  'admin/games',      'grid'],
   ['customers', 'Pelanggan',      'admin/customers',  'users'],
   ['users',     'Akun Admin',     'admin/users',      'shield'],
+  ['settings',  'Pengaturan',     'admin/settings',   'settings'],
 ];
 $initial = html_escape(mb_strtoupper(mb_substr($admin['name'], 0, 1)));
 ?>
@@ -44,7 +45,7 @@ $initial = html_escape(mb_strtoupper(mb_substr($admin['name'], 0, 1)));
   </aside>
 
   <!-- Bottom tab (mobile) -->
-  <nav class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-[var(--line)] bg-white/95 backdrop-blur md:hidden">
+  <nav class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-6 border-t border-[var(--line)] bg-white/95 backdrop-blur md:hidden">
     <?php foreach ($nav as $n): $on = ($n[0] === '' ? (empty($seg) || $seg === 'home') : $seg === $n[0]); ?>
       <a href="<?= site_url($n[2]) ?>" class="flex flex-col items-center gap-0.5 py-2 text-[10px] font-semibold <?= $on ? 'text-brand' : 'text-slate-500' ?>"><?= icon($n[3], 'h-5 w-5') ?><?= html_escape(explode(' ', $n[1])[0]) ?></a>
     <?php endforeach; ?>

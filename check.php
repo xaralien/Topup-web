@@ -82,7 +82,7 @@ add($rows, 'Konfigurasi', 'sess_cookie_name = mytopup_sess', strpos($cfg, "mytop
 $routes = @file_get_contents("$root/application/config/routes.php") ?: '';
 add($rows, 'Konfigurasi', 'routes.php tanpa custom route', !preg_match('/\$route\[\'(?!default_controller|404_override|translate_uri_dashes)/', $routes), 'routes.php masih berisi route lama.');
 add($rows, 'Konfigurasi', '.env ada', is_file("$root/.env"), 'Opsional: salin .env.example ke .env bila DB Anda bukan root tanpa password.');
-add($rows, 'Konfigurasi', 'DUITKU_MERCHANT_CODE & DUITKU_API_KEY terisi', getenv('DUITKU_MERCHANT_CODE') && getenv('DUITKU_API_KEY'), 'Perlu untuk pembayaran (login tidak butuh).');
+add($rows, 'Konfigurasi', 'Duitku via .env (opsional – bisa diisi di Admin > Pengaturan)', true);
 
 // 4. Folder yang harus bisa ditulis
 foreach (['application/sessions', 'application/logs', 'application/cache', 'assets/uploads/games'] as $d) {
@@ -100,11 +100,12 @@ if (extension_loaded('mysqli')) {
 }
 add($rows, 'Database', "Koneksi $user@$host / $name", $db !== null, $dbmsg ?: 'Cek DB_HOST/DB_USER/DB_PASS/DB_NAME di .env dan pastikan database sudah dibuat.');
 if ($db) {
-    foreach (['games', 'packs', 'orders', 'payment_logs', 'admins', 'login_attempts', 'users'] as $t) {
+    foreach (['games', 'packs', 'orders', 'payment_logs', 'admins', 'login_attempts', 'users', 'settings'] as $t) {
         $r = $db->query("SHOW TABLES LIKE '$t'");
         $ok = $r && $r->num_rows > 0;
-        $hint = in_array($t, ['users'], true) ? 'Jalankan database/migrations/003_customer_accounts.sql'
-              : (in_array($t, ['admins', 'login_attempts'], true) ? 'Jalankan database/migrations/002_admin_and_images.sql' : 'Impor database/schema.sql');
+        $hint = $t === 'settings' ? 'Jalankan database/migrations/004_settings.sql'
+              : (in_array($t, ['users'], true) ? 'Jalankan database/migrations/003_customer_accounts.sql'
+              : (in_array($t, ['admins', 'login_attempts'], true) ? 'Jalankan database/migrations/002_admin_and_images.sql' : 'Impor database/schema.sql'));
         add($rows, 'Database', "Tabel $t", $ok, $hint);
     }
     $r = @$db->query("SHOW COLUMNS FROM games LIKE 'image'");

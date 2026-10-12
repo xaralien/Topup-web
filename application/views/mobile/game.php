@@ -10,6 +10,7 @@
   </div>
   <?php if (!empty($global_error)): ?><div class="mx-4 mt-4 rounded-xl bg-rose-50 p-3 text-sm font-semibold text-rose-700"><?= html_escape($global_error) ?></div><?php endif; ?>
 
+  <?php if (empty($methods) || empty($pay_ready)): ?><div class="mx-4 mt-4 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-800">Pembayaran belum tersedia. Silakan hubungi admin toko.</div><?php endif; ?>
   <section class="mx-4 mt-5 rounded-xl border border-slate-200 p-4">
     <h2 class="step-title"><span>1</span> ID akun</h2>
     <div class="mt-3 flex gap-2">

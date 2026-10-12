@@ -7,6 +7,7 @@ class Game extends MY_Controller
     {
         parent::__construct();
         $this->load->model('game_model');
+        $this->load->library('duitku');
     }
 
     /** /game/<slug> – segmen kedua dianggap slug (tanpa routes.php). */
@@ -27,7 +28,8 @@ class Game extends MY_Controller
         $this->render('game', [
             'title'   => 'Top Up ' . $game['name'],
             'game'    => $game,
-            'methods' => $this->config->item('payment_methods', 'duitku'),
+            'methods' => $this->setting_model->enabled_methods(),
+            'pay_ready' => $this->duitku->configured(),
         ]);
     }
 }

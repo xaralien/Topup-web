@@ -38,3 +38,6 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 assets/uploads/games/*
 !assets/uploads/games/.gitkeep
 application/sessions/*
+
+# kunci enkripsi pengaturan rahasia (dibuat otomatis; BACKUP bersama database)
+application/config/app.key

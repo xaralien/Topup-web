@@ -37,6 +37,10 @@
     <?php endforeach; ?>
   </dl>
 
+  <?php $cs = $this->setting_model->wa_link('Halo ' . $site['name'] . ', saya mau tanya pesanan ' . $order['order_no'] . '.'); if ($cs): ?>
+    <a href="<?= html_escape($cs) ?>" target="_blank" rel="noopener" class="mt-5 inline-flex items-center gap-2 rounded-xl border border-emerald-300 px-4 py-2.5 text-sm font-bold text-emerald-700 hover:bg-emerald-50"><?= icon('chat', 'h-4 w-4') ?>Tanya CS via WhatsApp</a>
+  <?php endif; ?>
+
   <?php if (in_array($order['status'], ['expired', 'failed'], true)): ?>
     <a href="<?= site_url('game/' . $this->game_model->slug_by_id($order['game_id'])) ?>" class="btn-primary mt-5">Pesan lagi</a>
   <?php endif; ?>

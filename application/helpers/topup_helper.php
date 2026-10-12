@@ -71,9 +71,34 @@ if (!function_exists('icon')) {
             'bolt'     => '<path d="M13 3 5 13h6l-1 8 8-10h-6z"/>',
             'wallet'   => '<path d="M4 7a2 2 0 0 1 2-2h12v4"/><path d="M4 7v10a2 2 0 0 0 2 2h13a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H6a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="13.5" r="1"/>',
             'check'    => '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+            'settings' => '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+            'chat'     => '<path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.7-5.2A8.4 8.4 0 1 1 21 11.5z"/><path d="M8.5 9.5c.3 2.3 2.7 4.7 5 5l1.2-1.2-1.8-1-.8.6a4 4 0 0 1-1.7-1.7l.6-.8-1-1.8z"/>',
         ];
         $d = isset($p[$name]) ? $p[$name] : '';
         return '<svg class="' . html_escape($class) . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . $d . '</svg>';
+    }
+}
+
+if (!function_exists('wa_normalize')) {
+    /** Nomor WhatsApp -> format internasional tanpa tanda (08123 / +62 812-3 -> 62812...). '' bila tidak valid. */
+    function wa_normalize($num)
+    {
+        $d = preg_replace('/\D+/', '', (string) $num);
+        if ($d === '') {
+            return '';
+        }
+        if (strpos($d, '00') === 0) { $d = substr($d, 2); }
+        if (strpos($d, '0') === 0) { $d = '62' . substr($d, 1); }
+        elseif (strpos($d, '8') === 0) { $d = '62' . $d; }
+        return preg_match('/^62[1-9][0-9]{7,12}$/', $d) ? $d : '';
+    }
+}
+
+if (!function_exists('wa_url')) {
+    function wa_url($number, $text = '')
+    {
+        $n = wa_normalize($number);
+        return $n === '' ? '' : 'https://wa.me/' . $n . ($text !== '' ? '?text=' . rawurlencode($text) : '');
     }
 }
 

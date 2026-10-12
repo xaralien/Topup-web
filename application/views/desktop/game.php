@@ -6,6 +6,7 @@
   <a href="<?= site_url() ?>" class="text-sm text-slate-500 hover:text-brand">← Kembali</a>
   <?php if (!empty($global_error)): ?><div class="mt-4 rounded-xl bg-rose-50 p-4 text-sm font-semibold text-rose-700"><?= html_escape($global_error) ?></div><?php endif; ?>
 
+  <?php if (empty($methods) || empty($pay_ready)): ?><div class="mt-4 rounded-xl bg-amber-50 p-4 text-sm font-semibold text-amber-800">Pembayaran belum tersedia. Silakan hubungi admin toko.</div><?php endif; ?>
   <div class="mt-4 grid grid-cols-3 gap-8">
     <aside class="col-span-1">
       <div class="sticky top-24 rounded-2xl border border-slate-200 p-6">
