@@ -1,0 +1,11 @@
+# Folder upload: jangan pernah mengeksekusi skrip.
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+  php_flag engine off
+</IfModule>
+<FilesMatch "\.(php[0-9]?|phtml|phar|pl|py|cgi|sh)$">
+  Require all denied
+</FilesMatch>
+Options -ExecCGI -Indexes

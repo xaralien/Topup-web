@@ -9,7 +9,7 @@
   <div class="mt-4 grid grid-cols-3 gap-8">
     <aside class="col-span-1">
       <div class="sticky top-24 rounded-2xl border border-slate-200 p-6">
-        <div class="h-40 rounded-xl" style="background:<?= $game['color'] ?>"></div>
+        <?= game_thumb($game, 'h-40 rounded-xl') ?>
         <h1 class="mt-4 font-display text-2xl font-extrabold"><?= html_escape($game['name']) ?></h1>
         <p class="text-sm text-slate-600">Top up <?= html_escape($game['currency']) ?> instan, proses otomatis 24 jam.</p>
       </div>

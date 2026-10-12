@@ -5,7 +5,7 @@
 
   <div class="flex items-center gap-3 px-4 pt-4">
     <a href="<?= site_url() ?>" class="text-slate-500">←</a>
-    <div class="h-12 w-12 rounded-xl" style="background:<?= $game['color'] ?>"></div>
+    <?= game_thumb($game, 'h-12 w-12 rounded-xl') ?>
     <div><h1 class="font-display text-lg font-extrabold leading-tight"><?= html_escape($game['name']) ?></h1><p class="text-xs text-slate-500">Proses otomatis 24 jam</p></div>
   </div>
   <?php if (!empty($global_error)): ?><div class="mx-4 mt-4 rounded-xl bg-rose-50 p-3 text-sm font-semibold text-rose-700"><?= html_escape($global_error) ?></div><?php endif; ?>

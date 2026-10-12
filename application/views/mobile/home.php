@@ -18,7 +18,7 @@
   <div class="mt-3 flex gap-3 overflow-x-auto px-4 pb-2 snap-x scroll-px-4 no-scrollbar">
     <?php foreach ($popular as $g): ?>
       <a href="<?= site_url('game/' . $g['slug']) ?>" class="game-card w-32 shrink-0 snap-start">
-        <div class="h-20 rounded-xl mb-2" style="background:<?= $g['color'] ?>"></div>
+        <?= game_thumb($g, 'h-20 rounded-xl mb-2') ?>
         <div class="text-xs font-bold"><?= html_escape($g['name']) ?></div>
       </a>
     <?php endforeach; ?>
@@ -41,7 +41,7 @@
   <div class="mt-3 grid grid-cols-3 gap-3">
     <?php foreach ($games as $g): ?>
       <a href="<?= site_url('game/' . $g['slug']) ?>" class="game-card p-2" data-reveal>
-        <div class="h-14 rounded-lg mb-2" style="background:<?= $g['color'] ?>"></div>
+        <?= game_thumb($g, 'h-14 rounded-lg mb-2') ?>
         <div class="text-[11px] font-bold leading-tight"><?= html_escape($g['name']) ?></div>
       </a>
     <?php endforeach; ?>

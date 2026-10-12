@@ -85,6 +85,7 @@ return array(
 	'jpm'	=>	array('image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'),
 	'mj2'	=>	array('image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'),
 	'mjp2'	=>	array('image/jp2', 'video/mj2', 'image/jpx', 'image/jpm'),
+	'webp'	=> 'image/webp',
 	'png'	=>	array('image/png', 'image/x-png'),
 	'tiff'	=>	'image/tiff',
 	'tif'	=>	'image/tiff',

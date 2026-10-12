@@ -30,3 +30,24 @@ if (!function_exists('public_url')) {
         return site_url($uri);
     }
 }
+
+if (!function_exists('game_image_url')) {
+    function game_image_url($g)
+    {
+        return !empty($g['image']) ? base_url($g['image']) : '';
+    }
+}
+
+if (!function_exists('game_thumb')) {
+    /** Gambar game; bila belum ada, tampilkan blok warna. $class = ukuran/rounded (mis. "h-20 rounded-xl mb-3"). */
+    function game_thumb($g, $class = '')
+    {
+        $bg = preg_match('/^#[0-9a-fA-F]{3,8}$/', (string) $g['color']) ? $g['color'] : '#E2E8F0';
+        if (!empty($g['image'])) {
+            $w = preg_match('/(^|\s)w-/', $class) ? '' : 'w-full ';
+            return '<img src="' . html_escape(game_image_url($g)) . '" alt="' . html_escape($g['name']) . '" loading="lazy" decoding="async" class="' . $w . 'object-cover ' . html_escape($class) . '" style="background:' . $bg . '">';
+        }
+        return '<div class="' . html_escape($class) . '" style="background:' . $bg . '"></div>';
+    }
+}
+

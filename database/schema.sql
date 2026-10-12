@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS games (
   category    VARCHAR(40)  NOT NULL,
   currency    VARCHAR(60)  NOT NULL,
   color       VARCHAR(9)   NOT NULL DEFAULT '#E2E8F0',
+  image       VARCHAR(255) NULL,                 -- path relatif, mis. assets/uploads/games/abc.png
   is_hot      TINYINT(1)   NOT NULL DEFAULT 0,
   needs_zone  TINYINT(1)   NOT NULL DEFAULT 0,   -- 1 = butuh Server/Zone ID (mis. Mobile Legends)
   is_active   TINYINT(1)   NOT NULL DEFAULT 1,
@@ -66,4 +67,20 @@ CREATE TABLE IF NOT EXISTS payment_logs (
   payload    MEDIUMTEXT   NULL,
   created_at DATETIME     NOT NULL,
   KEY idx_logs_order (order_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS admins (
+  id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  username      VARCHAR(30)  NOT NULL UNIQUE,
+  name          VARCHAR(80)  NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  last_login_at DATETIME     NULL,
+  created_at    DATETIME     NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS login_attempts (
+  id         BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  ip         VARCHAR(45) NOT NULL,
+  created_at DATETIME    NOT NULL,
+  KEY idx_attempts (ip, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

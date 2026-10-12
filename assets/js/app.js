@@ -119,7 +119,8 @@
       items.forEach(function (it) {
         var a = document.createElement('a');
         a.href = it.url; a.className = 'flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-indigo-50';
-        var sw = document.createElement('span'); sw.className = 'h-8 w-8 shrink-0 rounded-lg'; sw.style.background = /^#[0-9a-f]{3,8}$/i.test(it.color) ? it.color : '#E2E8F0';
+        var sw = document.createElement(it.image ? 'img' : 'span'); sw.className = 'h-8 w-8 shrink-0 rounded-lg object-cover'; sw.style.background = /^#[0-9a-f]{3,8}$/i.test(it.color) ? it.color : '#E2E8F0';
+        if (it.image) { sw.src = it.image; sw.alt = ''; }
         var t = document.createElement('span'); t.className = 'flex-1 truncate text-sm font-semibold'; t.textContent = it.name;
         var m = document.createElement('span'); m.className = 'text-xs text-slate-500'; m.textContent = it.meta;
         a.appendChild(sw); a.appendChild(t); a.appendChild(m); box.appendChild(a);

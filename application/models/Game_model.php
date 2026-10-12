@@ -18,7 +18,7 @@ class Game_model extends CI_Model
         foreach ($this->db->order_by('sort_order, id')->get_where('games', ['is_active' => 1])->result_array() as $g) {
             $games[$g['id']] = [
                 'id' => (int) $g['id'], 'slug' => $g['slug'], 'category' => $g['category'], 'name' => $g['name'],
-                'currency' => $g['currency'], 'color' => $g['color'], 'hot' => (bool) $g['is_hot'],
+                'currency' => $g['currency'], 'color' => $g['color'], 'image' => $g['image'], 'hot' => (bool) $g['is_hot'],
                 'needs_zone' => (bool) $g['needs_zone'], 'packs' => [],
             ];
         }

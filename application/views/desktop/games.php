@@ -16,7 +16,7 @@
     <div class="mt-4 grid grid-cols-6 gap-4">
       <?php foreach ($games as $g): ?>
         <a href="<?= site_url('game/' . $g['slug']) ?>" class="game-card">
-          <div class="h-24 rounded-xl mb-3" style="background:<?= $g['color'] ?>"></div>
+          <?= game_thumb($g, 'h-24 rounded-xl mb-3') ?>
           <div class="text-sm font-bold"><?= html_escape($g['name']) ?></div>
           <div class="text-xs text-slate-500">mulai <?= rupiah($g['packs'][0][1]) ?></div>
         </a>

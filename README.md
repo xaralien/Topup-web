@@ -9,8 +9,21 @@ Isi repo ini adalah **lapisan aplikasi** (`application/`, `assets/`). Folder `sy
    mysql -u root -p mytopup < database/schema.sql
    mysql -u root -p mytopup < database/seed.sql      # katalog contoh (ganti dengan data asli)
    ```
+   Database lama (dari versi sebelumnya)? Jalankan `database/migrations/002_admin_and_images.sql`.
 2. `cp .env.example .env`, lalu isi `DB_*` dan kredensial Duitku (`DUITKU_MERCHANT_CODE`, `DUITKU_API_KEY`). `.env` sudah di-`.gitignore`.
 3. Jalankan: Apache/Nginx, atau `php -S localhost:8000` dari root (URL berbentuk `/index.php/...`).
+
+## Admin dashboard
+- URL: `/admin` (di `index.php/admin` bila tanpa rewrite). Buat admin pertama lewat terminal (password diketik interaktif, tidak tampil):
+  ```
+  php index.php cli create_admin namaanda
+  ```
+  Admin berikutnya bisa dibuat/dihapus dan password diganti di menu **Akun Admin**.
+- **Dashboard**: pesanan & pendapatan hari ini / 30 hari, pesanan menunggu bayar, pesanan perlu dikirim.
+- **Pesanan**: filter status, cari no. pesanan/email/ID akun, detail + log pembayaran, tombol *Tandai berhasil / gagal* setelah item dikirim.
+- **Game & Produk**: tambah/edit/nonaktifkan/hapus game, **unggah gambar** (JPG/PNG/WebP, maks 2 MB; di-encode ulang & dikecilkan ke 640px), kelola nominal & harga & SKU supplier.
+- Keamanan: password di-hash (bcrypt), CSRF di semua form, sesi httponly + regenerasi saat login, kunci login 5x gagal/15 menit per IP, upload divalidasi & di-encode ulang, folder upload tanpa eksekusi skrip (`assets/uploads/.htaccess`; di Nginx tolak eksekusi PHP di `/assets/uploads/`).
+- Sebaiknya pasang HTTPS dan batasi `/admin` (IP/VPN/basic auth) di server produksi.
 
 ## Alur pembayaran (Duitku)
 1. Pembeli isi ID, pilih nominal & metode di `/game/<slug>` -> `POST /order/create`.

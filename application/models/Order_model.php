@@ -66,4 +66,40 @@ class Order_model extends CI_Model
             'created_at' => date('Y-m-d H:i:s'),
         ]);
     }
+
+    /** Daftar pesanan untuk admin (filter status & kata kunci). Mengembalikan [rows, total]. */
+    public function search($status = '', $q = '', $limit = 25, $offset = 0)
+    {
+        $apply = function () use ($status, $q) {
+            if ($status !== '') {
+                $this->db->where('status', $status);
+            }
+            if ($q !== '') {
+                $this->db->group_start()->like('order_no', $q)->or_like('email', $q)->or_like('target_user_id', $q)->group_end();
+            }
+        };
+        $apply();
+        $total = $this->db->count_all_results('orders');
+        $apply();
+        $rows = $this->db->order_by('id', 'DESC')->limit((int) $limit, (int) $offset)->get('orders')->result_array();
+        return [$rows, $total];
+    }
+
+    public function logs($order_no)
+    {
+        return $this->db->order_by('id', 'DESC')->limit(50)->get_where('payment_logs', ['order_no' => $order_no])->result_array();
+    }
+
+    public function stats()
+    {
+        $today = date('Y-m-d');
+        $paid = "status IN ('paid','processing','success')";
+        $r = $this->db->query("SELECT
+                SUM(DATE(created_at) = ?) AS orders_today,
+                COALESCE(SUM(CASE WHEN $paid AND DATE(paid_at) = ? THEN amount END), 0) AS revenue_today,
+                COALESCE(SUM(CASE WHEN $paid AND paid_at >= ? THEN amount END), 0) AS revenue_30d,
+                SUM(status = 'pending') AS pending, SUM(status IN ('paid','processing')) AS to_fulfill
+            FROM orders", [$today, $today, date('Y-m-d H:i:s', time() - 30 * 86400)])->row_array();
+        return array_map('intval', array_map(function ($v) { return $v === null ? 0 : $v; }, $r));
+    }
 }

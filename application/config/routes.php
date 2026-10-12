@@ -15,3 +15,9 @@ $route['order/check']           = 'order/check';
 $route['order/status/(:any)']   = 'order/status/$1';
 $route['order/(:any)']          = 'order/view/$1';
 $route['payment/callback']      = 'payment/callback';
+
+// ---- Admin ----
+$route['admin']                       = 'admin/dashboard';
+$route['admin/login']                 = 'admin/auth/login';
+$route['admin/logout']                = 'admin/auth/logout';
+$route['admin/orders/set/(:any)/(:any)'] = 'admin/orders/set/$1/$2';

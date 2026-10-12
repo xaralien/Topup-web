@@ -7,6 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *   php index.php cli fail MT2610XXXXXXXXXX       # tandai gagal
  *   php index.php cli expire                      # kedaluwarsakan pesanan pending (jalankan via cron)
  *   php index.php cli orders [status]             # daftar pesanan
+ *   php index.php cli create_admin <username>     # buat akun admin (password diketik interaktif)
  */
 class Cli extends CI_Controller
 {
@@ -45,5 +46,26 @@ class Cli extends CI_Controller
         foreach ($this->db->get('orders')->result_array() as $o) {
             printf("%-20s %-11s %-10s %-22s %s\n", $o['order_no'], $o['status'], $o['amount'], $o['game_name'] . ' ' . $o['item_label'], $o['target_user_id'] . ($o['target_zone_id'] ? '(' . $o['target_zone_id'] . ')' : ''));
         }
+    }
+
+    public function create_admin($username = '')
+    {
+        $this->load->model('admin_model');
+        if (!preg_match('/^[a-z0-9_.]{3,30}$/', $username)) {
+            exit("Username: 3-30 karakter huruf kecil/angka/_/.\n");
+        }
+        if ($this->admin_model->find_by_username($username)) {
+            exit("Username sudah ada.\n");
+        }
+        echo 'Password (min 10 karakter): ';
+        @shell_exec('stty -echo 2>/dev/null');
+        $pw = trim((string) fgets(STDIN));
+        @shell_exec('stty echo 2>/dev/null');
+        echo "\n";
+        if (strlen($pw) < 10) {
+            exit("Password minimal 10 karakter.\n");
+        }
+        $this->admin_model->create($username, ucfirst($username), $pw);
+        echo "Admin '$username' dibuat. Login di /admin\n";
     }
 }

@@ -38,10 +38,10 @@ class Catalog extends MY_Controller
         $out = ['games' => [], 'products' => []];
         if (mb_strlen($q) >= 2) {
             foreach (array_slice($this->game_model->search($q), 0, 5) as $g) {
-                $out['games'][] = ['name' => $g['name'], 'meta' => $g['category'], 'color' => $g['color'], 'url' => site_url('game/' . $g['slug'])];
+                $out['games'][] = ['name' => $g['name'], 'meta' => $g['category'], 'color' => $g['color'], 'image' => game_image_url($g), 'url' => site_url('game/' . $g['slug'])];
             }
             foreach ($this->game_model->products($q, 4) as $p) {
-                $out['products'][] = ['name' => $p['game']['name'] . ' ' . $p['qty'] . ' ' . $p['game']['currency'], 'meta' => rupiah($p['price']), 'color' => $p['game']['color'], 'url' => site_url('game/' . $p['game']['slug'])];
+                $out['products'][] = ['name' => $p['game']['name'] . ' ' . $p['qty'] . ' ' . $p['game']['currency'], 'meta' => rupiah($p['price']), 'color' => $p['game']['color'], 'image' => game_image_url($p['game']), 'url' => site_url('game/' . $p['game']['slug'])];
             }
         }
         $this->output->set_content_type('application/json')->set_output(json_encode($out));

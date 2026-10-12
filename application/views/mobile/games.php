@@ -14,7 +14,7 @@
     <div class="mt-3 grid grid-cols-3 gap-3">
       <?php foreach ($games as $g): ?>
         <a href="<?= site_url('game/' . $g['slug']) ?>" class="game-card p-2">
-          <div class="h-14 rounded-lg mb-2" style="background:<?= $g['color'] ?>"></div>
+          <?= game_thumb($g, 'h-14 rounded-lg mb-2') ?>
           <div class="text-[11px] font-bold leading-tight"><?= html_escape($g['name']) ?></div>
         </a>
       <?php endforeach; ?>
