@@ -15,7 +15,7 @@
 <!-- POPULER (scroll horizontal) -->
 <section class="mt-8">
   <h2 class="px-4 font-display text-lg font-extrabold">🔥 Populer</h2>
-  <div class="mt-3 flex gap-3 overflow-x-auto px-4 pb-2 snap-x no-scrollbar">
+  <div class="mt-3 flex gap-3 overflow-x-auto px-4 pb-2 snap-x scroll-px-4 no-scrollbar">
     <?php foreach ($popular as $g): ?>
       <a href="<?= site_url('game/' . $g['slug']) ?>" class="game-card w-32 shrink-0 snap-start">
         <div class="h-20 rounded-xl mb-2" style="background:<?= $g['color'] ?>"></div>

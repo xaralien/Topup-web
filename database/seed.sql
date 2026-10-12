@@ -2,9 +2,9 @@ SET NAMES utf8mb4;
 INSERT INTO games (slug,name,category,currency,color,is_hot,needs_zone,sort_order) VALUES
  ('mobile-legends','Mobile Legends','Game Mobile','Diamond','#C7D2FE',1,1,1),
  ('free-fire','Free Fire','Game Mobile','Diamond','#FDE68A',1,0,2),
- ('genshin-impact','Genshin Impact','Game Mobile','Genesis Crystal','#FBCFE8',0,0,3),
+ ('genshin-impact','Genshin Impact','Game Mobile','Genesis Crystal','#FBCFE8',1,0,3),
  ('pubg-mobile','PUBG Mobile','Game Mobile','UC','#BAE6FD',1,0,4),
- ('roblox','Roblox','Game PC','Robux','#BBF7D0',0,0,5),
+ ('roblox','Roblox','Game PC','Robux','#BBF7D0',1,0,5),
  ('valorant','Valorant','Game PC','VP','#DDD6FE',0,0,6),
  ('steam-wallet','Steam Wallet','Voucher','IDR Voucher','#E2E8F0',0,0,7),
  ('google-play','Google Play','Voucher','Voucher','#D1FAE5',0,0,8);

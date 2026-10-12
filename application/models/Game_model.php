@@ -32,9 +32,16 @@ class Game_model extends CI_Model
         return $this->cache = array_values(array_filter($games, function ($g) { return !empty($g['packs']); }));
     }
 
-    public function popular()
+    /** Game populer; selalu minimal $min item (dilengkapi game lain bila yang ditandai is_hot kurang). */
+    public function popular($min = 5)
     {
-        return array_values(array_filter($this->all(), function ($g) { return $g['hot']; }));
+        $all = $this->all();
+        $hot = array_values(array_filter($all, function ($g) { return $g['hot']; }));
+        if (count($hot) < $min) {
+            $rest = array_values(array_filter($all, function ($g) { return !$g['hot']; }));
+            $hot = array_merge($hot, array_slice($rest, 0, $min - count($hot)));
+        }
+        return $hot;
     }
 
     public function find($slug)
