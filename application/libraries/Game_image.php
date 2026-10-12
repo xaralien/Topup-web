@@ -97,8 +97,9 @@ class Game_image
     private function keep_original($file, $dir, array $info)
     {
         $bytes = (string) file_get_contents($file);
-        // tolak bila ada penanda kode (skrip yang disisipkan di dalam "gambar")
-        if (preg_match('/<\?(php|=)|<script|<%/i', $bytes)) {
+        // Tolak bila ada penanda kode (skrip yang disisipkan di dalam "gambar"). Hanya penanda PANJANG yang
+        // dipakai: pola pendek seperti "<%" atau "<?=" muncul acak di data gambar terkompresi (false positive).
+        if (preg_match('/<\?php\b|<\?=\s*\$|<script\b/i', $bytes)) {
             $this->error = 'File ditolak: mengandung kode yang mencurigakan.';
             return null;
         }
