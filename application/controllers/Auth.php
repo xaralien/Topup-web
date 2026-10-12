@@ -57,7 +57,7 @@ class Auth extends MY_Controller
                 $error = 'Email/username atau password salah.';
             }
         }
-        $this->load->view('auth/login', ['error' => $error, 'identity' => $identity, 'next' => $next, 'title' => 'Masuk · MYTopup']);
+        $this->load->view('auth/login', ['error' => $error, 'identity' => $identity, 'next' => $next, 'title' => 'Masuk · MYTopup', 'no_admin' => $this->admin_model->count() === 0]);
     }
 
     public function register()
@@ -84,6 +84,48 @@ class Auth extends MY_Controller
             redirect('account');
         }
         $this->load->view('auth/register', ['title' => 'Daftar · MYTopup']);
+    }
+
+    /**
+     * /auth/setup – buat admin PERTAMA lewat browser. Hanya aktif selama belum ada admin.
+     * Aman: dari localhost boleh langsung; dari luar wajib kunci SETUP_KEY di .env.
+     */
+    public function setup()
+    {
+        if ($this->admin_model->count() > 0) {
+            show_404();
+        }
+        $key = (string) getenv('SETUP_KEY');
+        $ip  = $this->input->ip_address();
+        $local = in_array($ip, ['127.0.0.1', '::1'], TRUE);
+        $needs_key = !$local;
+        if ($needs_key && $key === '') {
+            show_error('Setup dari luar localhost dinonaktifkan. Isi SETUP_KEY di .env (lalu masukkan kuncinya di form ini), atau buat admin lewat terminal: php index.php cli create_admin namaanda', 403);
+        }
+
+        $this->form_validation->set_message([
+            'required' => '{field} wajib diisi.', 'min_length' => '{field} minimal {param} karakter.', 'max_length' => '{field} terlalu panjang.',
+            'matches' => '{field} tidak sama.', 'regex_match' => '{field} tidak valid.',
+        ]);
+        $this->form_validation->set_rules('username', 'Username', 'required|trim|regex_match[/^[a-z0-9_.]{3,30}$/]');
+        $this->form_validation->set_rules('name', 'Nama', 'required|trim|max_length[80]');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[10]|max_length[200]');
+        $this->form_validation->set_rules('password2', 'Konfirmasi password', 'required|matches[password]');
+
+        $error = null;
+        if ($this->input->method() === 'post' && $this->form_validation->run()) {
+            if ($needs_key && !hash_equals($key, (string) $this->input->post('setup_key'))) {
+                $error = 'Kunci setup salah.';
+            } elseif ($this->admin_model->count() > 0) {
+                show_404();
+            } else {
+                $id = $this->admin_model->create($this->input->post('username', TRUE), $this->input->post('name', TRUE), $this->input->post('password'));
+                $this->session->sess_regenerate(TRUE);
+                $this->session->set_userdata('admin_id', (int) $id);
+                redirect('admin');
+            }
+        }
+        $this->load->view('auth/setup', ['title' => 'Buat Admin · MYTopup', 'error' => $error, 'needs_key' => $needs_key]);
     }
 
     /** POST /auth/logout */

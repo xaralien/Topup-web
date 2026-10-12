@@ -21,7 +21,7 @@ Satu halaman masuk untuk semua: **`/auth/login`** (tombol *Masuk* di navbar).
 - Keamanan: password bcrypt, CSRF di semua form, sesi httponly + regenerasi saat login, kunci 5x gagal / 15 menit per IP, tujuan `?next=` hanya path internal.
 
 ## Admin dashboard
-- URL: `/admin`. Admin pertama dibuat lewat terminal (password diketik interaktif):
+- URL: `/admin`. **Admin pertama**: buka `/auth/login` -> *Buat admin pertama* (`/auth/setup`), isi username & password, langsung masuk. Halaman ini hilang (404) setelah ada admin. Dari localhost langsung bisa; dari server publik wajib isi `SETUP_KEY` di `.env` dan memasukkannya di form. Alternatif lewat terminal:
   ```
   php index.php cli create_admin namaanda
   ```
