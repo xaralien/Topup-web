@@ -17,4 +17,5 @@ Isi repo ini adalah **lapisan aplikasi** (`application/`, `assets/`). Folder `sy
 - `models/Game_model.php` – data dummy (ganti dengan DB/API supplier).
 - `controllers/Home.php`, `Game.php` – landing & detail game (`/game/mobile-legends`).
 - `assets/js/app.js` – scroll reveal, counter, countdown, logika pilih nominal.
+- `controllers/Catalog.php` – `/games` (semua game + filter kategori), `/search?q=` (game + produk), `/search/suggest` (JSON saran saat mengetik).
 - Tailwind lewat CDN (prototipe). Untuk produksi, build CSS dengan Tailwind CLI.

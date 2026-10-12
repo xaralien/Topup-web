@@ -36,8 +36,11 @@
 
 <!-- GAME GRID -->
 <section id="game" class="mx-auto max-w-6xl px-6 pt-20">
-  <h2 class="font-display text-3xl font-extrabold">Pilih game kamu</h2>
-  <p class="mt-1 text-slate-600">Klik game, isi ID, pilih nominal, bayar.</p>
+  <div class="flex items-end justify-between">
+    <div><h2 class="font-display text-3xl font-extrabold">Pilih game kamu</h2>
+    <p class="mt-1 text-slate-600">Klik game, isi ID, pilih nominal, bayar.</p></div>
+    <a href="<?= site_url('games') ?>" class="text-sm font-bold text-brand hover:underline">Lihat semua game →</a>
+  </div>
   <div class="mt-8 grid grid-cols-6 gap-4">
     <?php foreach ($games as $g): ?>
       <a href="<?= site_url('game/' . $g['slug']) ?>" class="game-card" data-reveal>

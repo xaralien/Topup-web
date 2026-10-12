@@ -3,4 +3,5 @@
     <a href="<?= site_url() ?>" class="font-display font-extrabold text-lg">MY<span class="text-brand">Topup</span></a>
     <a href="#" class="rounded-lg bg-brand px-3 py-1.5 text-xs font-bold text-white">Masuk</a>
   </div>
+  <?php $this->load->view('partials/search_box', ['class' => 'px-4 pb-3']); ?>
 </header>

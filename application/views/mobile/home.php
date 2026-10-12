@@ -36,7 +36,8 @@
 
 <!-- SEMUA GAME -->
 <section id="game" class="mt-8 px-4">
-  <h2 class="font-display text-lg font-extrabold">Semua game</h2>
+  <div class="flex items-center justify-between"><h2 class="font-display text-lg font-extrabold">Semua game</h2>
+    <a href="<?= site_url('games') ?>" class="text-xs font-bold text-brand">Lihat semua →</a></div>
   <div class="mt-3 grid grid-cols-3 gap-3">
     <?php foreach ($games as $g): ?>
       <a href="<?= site_url('game/' . $g['slug']) ?>" class="game-card p-2" data-reveal>

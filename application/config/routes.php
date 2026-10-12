@@ -5,4 +5,7 @@ $route['default_controller']   = 'home';
 $route['404_override']         = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['game/(:any)'] = 'game/detail/$1';
+$route['game/(:any)']   = 'game/detail/$1';
+$route['games']         = 'catalog/index';
+$route['search']        = 'catalog/index';
+$route['search/suggest'] = 'catalog/suggest';
