@@ -6,5 +6,5 @@
   <a href="<?= site_url() ?>" class="flex flex-col items-center py-2 text-brand"><span class="text-lg">🏠</span>Beranda</a>
   <a href="<?= site_url('games') ?>" class="flex flex-col items-center py-2"><span class="text-lg">🎮</span>Game</a>
   <a href="<?= site_url('order/check') ?>" class="flex flex-col items-center py-2"><span class="text-lg">🧾</span>Pesanan</a>
-  <a href="#" class="flex flex-col items-center py-2"><span class="text-lg">👤</span>Akun</a>
+  <a href="<?= site_url(empty($user) ? 'auth/login' : 'account') ?>" class="flex flex-col items-center py-2"><span class="text-lg">👤</span>Akun</a>
 </nav>

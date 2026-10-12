@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Catalog extends MY_Controller
+class Search extends MY_Controller
 {
     public function __construct()
     {
@@ -9,29 +9,14 @@ class Catalog extends MY_Controller
         $this->load->model('game_model');
     }
 
-    /** /games (semua game + filter kategori) dan /search?q= (game + produk). */
+    /** /search?q= -> halaman hasil (sama dengan /games?q=). */
     public function index()
     {
-        $q   = trim((string) $this->input->get('q', TRUE));
-        $cat = trim((string) $this->input->get('kategori', TRUE));
-        $q   = mb_substr($q, 0, 50);
-
-        $cats = $this->game_model->categories();
-        if (!in_array($cat, $cats, TRUE)) {
-            $cat = '';
-        }
-
-        $this->render('games', [
-            'title'      => $q !== '' ? 'Cari "' . $q . '"' : 'Semua Game',
-            'q'          => $q,
-            'cat'        => $cat,
-            'categories' => $cats,
-            'games'      => $this->game_model->search($q, $cat),
-            'products'   => $q !== '' ? $this->game_model->products($q, 12) : [],
-        ]);
+        $q = (string) $this->input->get('q', TRUE);
+        redirect('games' . ($q !== '' ? '?q=' . rawurlencode($q) : ''));
     }
 
-    /** JSON untuk dropdown saran saat mengetik. */
+    /** /search/suggest?q= – JSON untuk dropdown saran saat mengetik. */
     public function suggest()
     {
         $q = mb_substr(trim((string) $this->input->get('q', TRUE)), 0, 50);

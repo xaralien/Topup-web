@@ -1,18 +1,18 @@
-<div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-  <table class="w-full text-left text-sm">
-    <thead class="bg-slate-50 text-xs uppercase text-slate-500"><tr><th class="p-3">No. Pesanan</th><th class="p-3">Produk</th><th class="p-3">ID Akun</th><th class="p-3 text-right">Total</th><th class="p-3">Status</th><th class="p-3">Waktu</th></tr></thead>
-    <tbody class="divide-y divide-slate-100">
+<div class="a-card overflow-x-auto">
+  <table class="a-table">
+    <thead><tr><th>No. Pesanan</th><th>Produk</th><th>ID Akun</th><th class="text-right">Total</th><th>Status</th><th>Waktu</th></tr></thead>
+    <tbody>
     <?php foreach ($rows as $o): $i = order_status_info($o['status']); ?>
-      <tr class="hover:bg-slate-50">
-        <td class="p-3 font-semibold"><a class="text-brand hover:underline" href="<?= site_url('admin/orders/view/' . $o['order_no']) ?>"><?= html_escape($o['order_no']) ?></a></td>
-        <td class="p-3"><?= html_escape($o['game_name'] . ' · ' . $o['item_label']) ?></td>
-        <td class="p-3"><?= html_escape($o['target_user_id'] . ($o['target_zone_id'] ? ' (' . $o['target_zone_id'] . ')' : '')) ?></td>
-        <td class="p-3 text-right font-semibold"><?= rupiah($o['amount']) ?></td>
-        <td class="p-3"><span class="rounded-full px-2.5 py-1 text-xs font-bold <?= $i[1] ?>"><?= $i[0] ?></span></td>
-        <td class="p-3 whitespace-nowrap text-slate-500"><?= html_escape($o['created_at']) ?></td>
+      <tr>
+        <td class="font-semibold"><a class="text-brand hover:underline" href="<?= site_url('admin/orders/view/' . $o['order_no']) ?>"><?= html_escape($o['order_no']) ?></a></td>
+        <td><?= html_escape($o['game_name']) ?> <span class="text-slate-400">·</span> <?= html_escape($o['item_label']) ?></td>
+        <td class="text-slate-600"><?= html_escape($o['target_user_id'] . ($o['target_zone_id'] ? ' (' . $o['target_zone_id'] . ')' : '')) ?></td>
+        <td class="text-right font-bold"><?= rupiah($o['amount']) ?></td>
+        <td><span class="rounded-full px-2.5 py-1 text-xs font-bold <?= $i[1] ?>"><?= $i[0] ?></span></td>
+        <td class="whitespace-nowrap text-slate-500"><?= html_escape(substr($o['created_at'], 0, 16)) ?></td>
       </tr>
     <?php endforeach; ?>
-    <?php if (!$rows): ?><tr><td colspan="6" class="p-8 text-center text-slate-500">Belum ada pesanan.</td></tr><?php endif; ?>
+    <?php if (!$rows): ?><tr><td colspan="6" class="!py-10 text-center text-slate-400">Belum ada pesanan.</td></tr><?php endif; ?>
     </tbody>
   </table>
 </div>

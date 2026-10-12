@@ -9,21 +9,31 @@ Isi repo ini adalah **lapisan aplikasi** (`application/`, `assets/`). Folder `sy
    mysql -u root -p mytopup < database/schema.sql
    mysql -u root -p mytopup < database/seed.sql      # katalog contoh (ganti dengan data asli)
    ```
-   Database lama (dari versi sebelumnya)? Jalankan `database/migrations/002_admin_and_images.sql`.
+   Database lama (dari versi sebelumnya)? Jalankan migrasi berurutan: `database/migrations/002_admin_and_images.sql` lalu `003_customer_accounts.sql`.
 2. `cp .env.example .env`, lalu isi `DB_*` dan kredensial Duitku (`DUITKU_MERCHANT_CODE`, `DUITKU_API_KEY`). `.env` sudah di-`.gitignore`.
 3. Jalankan: Apache/Nginx, atau `php -S localhost:8000` dari root (URL berbentuk `/index.php/...`).
 
+## Login (pelanggan & admin)
+Satu halaman masuk untuk semua: **`/auth/login`** (tombol *Masuk* di navbar).
+- Diisi **email** -> akun pelanggan -> `/account` (riwayat pesanan, ganti password). Daftar di `/auth/register`.
+- Diisi **username** (tanpa `@`) -> akun admin -> `/admin`.
+- Pelanggan yang login otomatis terisi emailnya saat checkout dan pesanannya tercatat di akunnya. Checkout sebagai tamu tetap bisa.
+- Keamanan: password bcrypt, CSRF di semua form, sesi httponly + regenerasi saat login, kunci 5x gagal / 15 menit per IP, tujuan `?next=` hanya path internal.
+
 ## Admin dashboard
-- URL: `/admin` (di `index.php/admin` bila tanpa rewrite). Buat admin pertama lewat terminal (password diketik interaktif, tidak tampil):
+- URL: `/admin`. Admin pertama dibuat lewat terminal (password diketik interaktif):
   ```
   php index.php cli create_admin namaanda
   ```
-  Admin berikutnya bisa dibuat/dihapus dan password diganti di menu **Akun Admin**.
-- **Dashboard**: pesanan & pendapatan hari ini / 30 hari, pesanan menunggu bayar, pesanan perlu dikirim.
-- **Pesanan**: filter status, cari no. pesanan/email/ID akun, detail + log pembayaran, tombol *Tandai berhasil / gagal* setelah item dikirim.
-- **Game & Produk**: tambah/edit/nonaktifkan/hapus game, **unggah gambar** (JPG/PNG/WebP, maks 2 MB; di-encode ulang & dikecilkan ke 640px), kelola nominal & harga & SKU supplier.
-- Keamanan: password di-hash (bcrypt), CSRF di semua form, sesi httponly + regenerasi saat login, kunci login 5x gagal/15 menit per IP, upload divalidasi & di-encode ulang, folder upload tanpa eksekusi skrip (`assets/uploads/.htaccess`; di Nginx tolak eksekusi PHP di `/assets/uploads/`).
-- Sebaiknya pasang HTTPS dan batasi `/admin` (IP/VPN/basic auth) di server produksi.
+  Admin lain dikelola di menu **Akun Admin**.
+- **Dashboard**: pendapatan hari ini / 30 hari, grafik 14 hari, status pesanan, pesanan perlu dikirim, pesanan terbaru.
+- **Pesanan**: filter status, cari no. pesanan/email/ID akun, detail + log pembayaran, *Tandai berhasil / gagal* setelah item dikirim.
+- **Game & Produk**: tambah/edit/nonaktifkan/hapus game, **unggah gambar** (JPG/PNG/WebP, maks 2 MB; di-encode ulang & dikecilkan ke 640px), kelola nominal, harga, dan SKU supplier.
+- **Pelanggan**: daftar akun terdaftar + jumlah pesanan & total belanja.
+- Folder upload tanpa eksekusi skrip (`assets/uploads/.htaccess`; di Nginx tolak PHP di `/assets/uploads/`). Pasang HTTPS dan sebaiknya batasi `/admin` (IP/VPN/basic auth) di produksi.
+
+## URL tanpa `routes.php`
+Tidak ada custom route; URL mengikuti pola CodeIgniter `controller/method/param` (`/games`, `/auth/login`, `/account`, `/admin/orders/view/<no>`, `/payment/callback`, ...). URL cantik `/game/<slug>` dan `/order/<no>` ditangani `_remap()` di controllernya. `application/config/routes.php` hanya berisi `default_controller`.
 
 ## Alur pembayaran (Duitku)
 1. Pembeli isi ID, pilih nominal & metode di `/game/<slug>` -> `POST /order/create`.
@@ -50,7 +60,7 @@ Pengiriman item otomatis butuh supplier (Digiflazz, VIP Reseller, dst.): tambahk
 ## Struktur
 - `core/MY_Controller.php` – `render($page, $data)` merakit head + view + footer.
 - `models/Game_model.php` (katalog dari DB), `models/Order_model.php` (pesanan, transisi status atomik).
-- `libraries/Duitku.php` (klien API), `libraries/Fulfillment.php`, `controllers/Order.php`, `controllers/Payment.php` (webhook), `controllers/Cli.php`.
+- `libraries/Duitku.php` (klien API), `libraries/Fulfillment.php`, `controllers/Order.php`, `controllers/Payment.php` (webhook), `controllers/Auth.php` + `Account.php`, `controllers/admin/*`, `controllers/Cli.php`.
 - `controllers/Home.php`, `Game.php` – landing & detail game (`/game/mobile-legends`).
 - `assets/js/app.js` – scroll reveal, counter, countdown, logika pilih nominal.
 - `controllers/Catalog.php` – `/games` (semua game + filter kategori), `/search?q=` (game + produk), `/search/suggest` (JSON saran saat mengetik).

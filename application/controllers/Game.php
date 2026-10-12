@@ -9,6 +9,15 @@ class Game extends MY_Controller
         $this->load->model('game_model');
     }
 
+    /** /game/<slug> – segmen kedua dianggap slug (tanpa routes.php). */
+    public function _remap($slug = '')
+    {
+        if ($slug === 'index') {
+            redirect('games');
+        }
+        $this->detail($slug);
+    }
+
     public function detail($slug = '')
     {
         $game = $this->game_model->find($slug);

@@ -1,9 +1,9 @@
-<h1 class="font-display text-2xl font-extrabold">Pesanan <span class="text-sm font-normal text-slate-500">(<?= $total ?>)</span></h1>
+<header><h1 class="a-title">Pesanan</h1><p class="a-sub mt-1"><?= $total ?> pesanan<?= $status || $q ? ' ditemukan' : '' ?></p></header>
 <form method="get" action="<?= site_url('admin/orders') ?>" class="mt-4 flex flex-wrap gap-2">
   <select name="status" class="field !w-auto"><option value="">Semua status</option>
     <?php foreach ($statuses as $s): ?><option value="<?= $s ?>" <?= $s === $status ? 'selected' : '' ?>><?= order_status_info($s)[0] ?></option><?php endforeach; ?></select>
   <input name="q" value="<?= html_escape($q) ?>" placeholder="No. pesanan / email / ID akun" class="field !w-72">
-  <button class="btn-primary !py-2">Cari</button>
+  <button class="a-btn">Cari</button>
 </form>
 <div class="mt-4"><?php $this->load->view('admin/_order_table', ['rows' => $rows]); ?></div>
 <?php if ($pages > 1): $qs = http_build_query(['status' => $status, 'q' => $q]); ?>

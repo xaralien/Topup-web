@@ -4,34 +4,56 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#4F46E5">
 <title><?= html_escape($title) ?></title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <script>tailwind.config={theme:{extend:{colors:{brand:{DEFAULT:'#4F46E5',dark:'#3730A3',soft:'#EEF2FF'},ink:'#0F172A',paper:'#F8FAFC'},fontFamily:{display:['"Plus Jakarta Sans"','sans-serif'],sans:['Inter','sans-serif']}}}}</script>
 <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/css/admin.css') ?>">
 </head>
-<body class="bg-paper font-sans text-ink antialiased">
-<?php $seg = $this->uri->segment(2); $nav = ['' => ['Dashboard', 'admin'], 'orders' => ['Pesanan', 'admin/orders'], 'games' => ['Game & Produk', 'admin/games'], 'users' => ['Akun Admin', 'admin/users']]; ?>
-<div class="md:flex min-h-screen">
-  <aside class="md:w-60 md:shrink-0 bg-ink text-slate-300 md:min-h-screen">
-    <div class="flex items-center justify-between px-5 py-4 md:block">
-      <a href="<?= site_url('admin') ?>" class="font-display text-lg font-extrabold text-white">MY<span class="text-indigo-400">Topup</span> <span class="text-xs font-semibold text-slate-400">admin</span></a>
-    </div>
-    <nav class="flex gap-1 overflow-x-auto px-3 pb-3 md:block md:space-y-1 md:px-3">
-      <?php foreach ($nav as $key => $n): $on = ($key === '' ? (empty($seg) || $seg === 'dashboard') : $seg === $key); ?>
-        <a href="<?= site_url($n[1]) ?>" class="block whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold <?= $on ? 'bg-white/10 text-white' : 'hover:bg-white/5' ?>"><?= $n[0] ?></a>
+<body class="admin font-sans antialiased">
+<?php
+$seg = $this->uri->segment(2);
+$nav = [
+  ['',          'Dashboard',      'admin',            'home'],
+  ['orders',    'Pesanan',        'admin/orders',     'receipt'],
+  ['games',     'Game & Produk',  'admin/games',      'grid'],
+  ['customers', 'Pelanggan',      'admin/customers',  'users'],
+  ['users',     'Akun Admin',     'admin/users',      'shield'],
+];
+$initial = html_escape(mb_strtoupper(mb_substr($admin['name'], 0, 1)));
+?>
+<div class="md:flex md:min-h-screen">
+  <!-- Sidebar (desktop) -->
+  <aside class="a-side hidden md:flex md:w-64 md:shrink-0 md:flex-col md:sticky md:top-0 md:h-screen">
+    <a href="<?= site_url('admin') ?>" class="px-6 pb-4 pt-6 font-display text-xl font-extrabold">MY<span class="text-brand">Topup</span><span class="ml-2 rounded-md bg-brand-soft px-1.5 py-0.5 align-middle text-[10px] font-bold uppercase tracking-wide text-brand">admin</span></a>
+    <nav class="flex-1 space-y-1 px-3 pt-2">
+      <?php foreach ($nav as $n): $on = ($n[0] === '' ? (empty($seg) || $seg === 'home') : $seg === $n[0]); ?>
+        <a href="<?= site_url($n[2]) ?>" class="a-link <?= $on ? 'is-on' : '' ?>"><?= icon($n[3]) ?><?= $n[1] ?></a>
       <?php endforeach; ?>
-      <a href="<?= site_url() ?>" target="_blank" rel="noopener" class="block whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold hover:bg-white/5">Lihat situs ↗</a>
+      <a href="<?= site_url() ?>" target="_blank" rel="noopener" class="a-link mt-4"><?= icon('external') ?>Lihat situs</a>
     </nav>
-    <div class="hidden md:block px-5 pt-6 text-xs text-slate-400">
-      Masuk sebagai<div class="font-semibold text-white"><?= html_escape($admin['name']) ?></div>
-      <?= form_open('admin/logout', ['class' => 'mt-2']) ?><button class="font-semibold text-indigo-300 hover:underline">Keluar</button></form>
+    <div class="m-3 rounded-2xl border border-[var(--line)] bg-paper p-3">
+      <div class="flex items-center gap-3">
+        <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand text-sm font-bold text-white"><?= $initial ?></span>
+        <div class="min-w-0"><div class="truncate text-sm font-bold"><?= html_escape($admin['name']) ?></div><div class="truncate text-xs text-slate-500">@<?= html_escape($admin['username']) ?></div></div>
+      </div>
+      <?= form_open('auth/logout', ['class' => 'mt-3']) ?><button class="a-btn-soft w-full justify-center"><?= icon('logout', 'h-4 w-4') ?>Keluar</button></form>
     </div>
   </aside>
-  <main class="flex-1 min-w-0 p-4 md:p-8">
-    <div class="md:hidden mb-3 flex items-center justify-between text-xs text-slate-500">
-      <span><?= html_escape($admin['name']) ?></span>
-      <?= form_open('admin/logout') ?><button class="font-semibold text-brand">Keluar</button></form>
+
+  <!-- Bottom tab (mobile) -->
+  <nav class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-[var(--line)] bg-white/95 backdrop-blur md:hidden">
+    <?php foreach ($nav as $n): $on = ($n[0] === '' ? (empty($seg) || $seg === 'home') : $seg === $n[0]); ?>
+      <a href="<?= site_url($n[2]) ?>" class="flex flex-col items-center gap-0.5 py-2 text-[10px] font-semibold <?= $on ? 'text-brand' : 'text-slate-500' ?>"><?= icon($n[3], 'h-5 w-5') ?><?= html_escape(explode(' ', $n[1])[0]) ?></a>
+    <?php endforeach; ?>
+  </nav>
+
+  <main class="min-w-0 flex-1 px-4 py-5 md:px-10 md:py-8">
+    <div class="mb-4 flex items-center justify-between md:hidden">
+      <a href="<?= site_url('admin') ?>" class="font-display text-lg font-extrabold">MY<span class="text-brand">Topup</span></a>
+      <?= form_open('auth/logout') ?><button class="a-btn-soft !py-1.5"><?= icon('logout', 'h-4 w-4') ?>Keluar</button></form>
     </div>
-    <?php if (!empty($flash)): ?><div class="mb-4 rounded-xl bg-emerald-50 p-3 text-sm font-semibold text-emerald-800"><?= html_escape($flash) ?></div><?php endif; ?>
-    <?php if (!empty($flash_error)): ?><div class="mb-4 rounded-xl bg-rose-50 p-3 text-sm font-semibold text-rose-700"><?= html_escape($flash_error) ?></div><?php endif; ?>
+    <?php if (!empty($flash)): ?><div class="mb-5 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800"><?= icon('check', 'h-4 w-4') ?><?= html_escape($flash) ?></div><?php endif; ?>
+    <?php if (!empty($flash_error)): ?><div class="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700"><?= html_escape($flash_error) ?></div><?php endif; ?>

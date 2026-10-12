@@ -10,6 +10,15 @@ class Order extends MY_Controller
         $this->load->library(['form_validation', 'duitku', 'fulfillment']);
     }
 
+    /** /order/create|check|status/<no> ditangani method biasa; /order/<no> = detail pesanan (tanpa routes.php). */
+    public function _remap($method, $params = [])
+    {
+        if (in_array($method, ['create', 'check', 'status'], TRUE)) {
+            return call_user_func_array([$this, $method], $params);
+        }
+        return $this->view($method);
+    }
+
     /** POST /order/create */
     public function create()
     {
@@ -70,7 +79,7 @@ class Order extends MY_Controller
         }
         $d = $res['data'];
         $this->order_model->create([
-            'order_no' => $order_no, 'game_id' => $game['id'], 'pack_id' => $pack['id'],
+            'order_no' => $order_no, 'user_id' => $this->current_user ? (int) $this->current_user['id'] : null, 'game_id' => $game['id'], 'pack_id' => $pack['id'],
             'game_name' => $game['name'], 'item_label' => $label, 'sku' => $pack['sku'],
             'target_user_id' => $user_id, 'target_zone_id' => $zone_id,
             'email' => $this->input->post('email', TRUE), 'whatsapp' => $wa ?: null,

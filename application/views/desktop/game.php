@@ -47,7 +47,7 @@
       <section class="rounded-2xl border border-slate-200 p-6">
         <h2 class="step-title"><span>3</span> Kontak</h2>
         <div class="mt-4 grid grid-cols-2 gap-3">
-          <div><input type="email" name="email" value="<?= set_value('email') ?>" placeholder="Email (bukti pembayaran)" class="field" data-email maxlength="160">
+          <div><input type="email" name="email" value="<?= set_value('email', isset($user['email']) ? $user['email'] : '') ?>" placeholder="Email (bukti pembayaran)" class="field" data-email maxlength="160">
             <?= form_error('email', '<p class="err">', '</p>') ?></div>
           <div><input type="tel" name="whatsapp" value="<?= set_value('whatsapp') ?>" placeholder="WhatsApp (opsional)" class="field" maxlength="16">
             <?= form_error('whatsapp', '<p class="err">', '</p>') ?></div>
